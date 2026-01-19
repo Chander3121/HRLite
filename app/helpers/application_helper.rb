@@ -1,4 +1,5 @@
 module ApplicationHelper
+  include IconHelper
 	def attendance_status_color(status)
     case status
     when "present"
@@ -14,5 +15,25 @@ module ApplicationHelper
     else
       "bg-red-100 text-red-700"
     end
+  end
+
+  def greeting_message
+    hour = Time.now.hour
+
+    if hour < 12
+      "Good morning"
+    elsif hour < 17
+      "Good afternoon"
+    else
+      "Good evening"
+    end
+  end
+
+  def dashboard_greeting(user)
+    name =
+      user.employee_profile&.first_name ||
+      user.email.split("@").first.capitalize
+
+    "#{greeting_message}, #{name}"
   end
 end

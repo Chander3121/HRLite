@@ -1,3 +1,14 @@
+<div class="mb-8 flex items-center justify-between">
+  <div>
+    <h2 class="text-3xl font-semibold text-gray-900">
+      <%= dashboard_greeting(current_user) %> 👋
+    </h2>
+    <p class="mt-1 text-sm text-gray-500">
+      Here’s what’s happening today
+    </p>
+  </div>
+</div>
+
 <h2 class="text-2xl font-bold mb-6">My Dashboard</h2>
 
 <% if Date.current.saturday? || Date.current.sunday? %>

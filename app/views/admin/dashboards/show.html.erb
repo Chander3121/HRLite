@@ -1,55 +1,124 @@
-<h2 class="text-2xl font-bold mb-6">Admin Dashboard</h2>
+<div class="mb-8 flex items-center justify-between">
+  <div>
+    <h2 class="text-3xl font-semibold text-gray-900">
+      <%= dashboard_greeting(current_user) %> 👋
+    </h2>
+    <p class="mt-1 text-sm text-gray-500">
+      Here’s what’s happening today
+    </p>
+  </div>
+</div>
+<div class="mb-8">
+  <h2 class="text-3xl font-semibold text-gray-900">Admin Dashboard</h2>
 
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+  <p class="mt-1 text-sm text-gray-500">
+    Overview of employees, attendance, and payroll
+  </p>
+</div>
+
+<!-- KPI CARDS -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
   <%= render "shared/stat_card",
       title: "Total Employees",
       value: @employees_count,
       color: "indigo",
-      link_present: true %>
+      icon: "users",
+      link_present: true do
+        admin_employees_path
+      end %>
 
   <%= render "shared/stat_card",
       title: "Today's Attendance",
       value: @today_attendance,
       color: "green",
+      icon: "clock",
       link_present: false %>
 
   <%= render "shared/stat_card",
       title: "Pending Leave Requests",
       value: @pending_leaves,
       color: "yellow",
+      icon: "calendar",
       link_present: false %>
 </div>
 
-<div class="mt-10 bg-white rounded-xl shadow p-6">
-  <h3 class="text-lg font-semibold mb-4">Quick Actions</h3>
+<!-- QUICK ACTIONS -->
+<div class="mt-12">
+  <h3 class="text-xl font-semibold text-gray-900 mb-4">
+    Quick Actions
+  </h3>
 
-  <div class="flex flex-wrap gap-4">
-    <%= link_to "Add Employee",
-        new_admin_employee_path,
-        class: "px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700" %>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <%= link_to new_admin_employee_path,
+        class: "group bg-white rounded-xl border p-5 hover:shadow-md transition" do %>
+      <p class="text-sm text-gray-500">Employees</p>
+      <p class="mt-1 text-lg font-medium text-gray-900">
+        Add Employee
+      </p>
+    <% end %>
 
-    <%= link_to "View Attendance",
-        admin_attendances_path,
-        class: "px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700" %>
+    <%= link_to admin_attendances_path,
+        class: "group bg-white rounded-xl border p-5 hover:shadow-md transition" do %>
+      <p class="text-sm text-gray-500">Attendance</p>
+      <p class="mt-1 text-lg font-medium text-gray-900">
+        View Daily Attendance
+      </p>
+    <% end %>
 
-    <%= link_to "Review Leaves",
-        admin_leave_requests_path,
-        class: "px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600" %>
+    <%= link_to admin_attendance_summaries_path,
+        class: "group bg-white rounded-xl border p-5 hover:shadow-md transition" do %>
+      <p class="text-sm text-gray-500">Reports</p>
+      <p class="mt-1 text-lg font-medium text-gray-900">
+        Monthly Attendance Summary
+      </p>
+    <% end %>
+  </div>
+</div>
 
-    <%= link_to "Monthly Attendance Summary",
-        admin_attendance_summaries_path,
-        class: "px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700" %>
+<!-- HR WORKFLOWS -->
+<div class="mt-12">
+  <h3 class="text-xl font-semibold text-gray-900 mb-4">
+    HR Workflows
+  </h3>
 
-    <%= link_to "Payroll",
-        admin_payrolls_path,
-        class: "px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700" %>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <%= link_to admin_leave_requests_path,
+        class: "bg-yellow-50 border border-yellow-100 rounded-xl p-5 hover:bg-yellow-100 transition" do %>
+      <p class="text-sm text-yellow-700">Leaves</p>
+      <p class="mt-1 text-lg font-semibold text-yellow-900">
+        Review Leave Requests
+      </p>
+    <% end %>
 
-    <%= link_to "Payslip Requests",
-        admin_payslip_requests_path,
-        class: "px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700" %>
+    <%= link_to admin_attendance_regularizations_path,
+        class: "bg-indigo-50 border border-indigo-100 rounded-xl p-5 hover:bg-indigo-100 transition" do %>
+      <p class="text-sm text-indigo-700">Attendance</p>
+      <p class="mt-1 text-lg font-semibold text-indigo-900">
+        Regularization Requests
+      </p>
+    <% end %>
 
-    <%= link_to "Attendance Regularizations",
-        admin_attendance_regularizations_path,
-        class: "px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700" %>
+    <%= link_to admin_payrolls_path,
+        class: "group bg-emerald-50 border border-emerald-100 rounded-xl p-5 hover:bg-emerald-100 transition" do %>
+      <div class="flex items-center gap-3">
+        <%= heroicon "currency-rupee",
+            class: "h-6 w-6 text-emerald-600" %>
+
+        <div>
+          <p class="text-sm text-emerald-700">Payroll</p>
+          <p class="text-lg font-semibold text-emerald-900">
+            Generate Payroll
+          </p>
+        </div>
+      </div>
+    <% end %>
+
+    <%= link_to admin_payslip_requests_path,
+        class: "bg-purple-50 border border-purple-100 rounded-xl p-5 hover:bg-purple-100 transition" do %>
+      <p class="text-sm text-purple-700">Payslips</p>
+      <p class="mt-1 text-lg font-semibold text-purple-900">
+        Payslip Requests
+      </p>
+    <% end %>
   </div>
 </div>

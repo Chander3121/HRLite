@@ -1,45 +1,93 @@
-<nav class="bg-white shadow">
-  <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-    <h1 class="text-xl font-bold text-indigo-600"><%= link_to "HRLite", root_path %></h1>
+<nav class="bg-white border-b">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <!-- Logo -->
+    <h1 class="text-xl font-bold text-indigo-600">
+      <%= link_to "HRLite", root_path %>
+    </h1>
 
-    <div class="flex items-center gap-4">
+    <!-- Right section -->
+    <div class="flex items-center gap-6">
       <% if user_signed_in? %>
-        <span class="text-sm text-gray-600">
-          <%= current_user.email %>
-        </span>
 
-        <% if current_user.admin? %>
-          <%= link_to "Payslip Requests",
-            admin_payslip_requests_path,
-            class: "text-sm font-medium text-gray-700 hover:text-indigo-600" %>
-        <% end %>
+        <!-- MAIN MENU DROPDOWN -->
+        <div class="relative" data-controller="dropdown">
+          <button
+            data-action="click->dropdown#toggle"
+            class="text-sm font-medium text-gray-700 hover:text-indigo-600 flex items-center gap-1">
+            Menu
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
 
-        <% if current_user.employee? %>
-          <%= link_to "My Profile",
-              edit_profile_path,
-              class: "text-sm font-medium text-gray-700 hover:text-indigo-600" %>
+          <div
+            data-dropdown-target="menu"
+            class="hidden absolute right-0 mt-2 w-56 bg-white border rounded-xl shadow-lg py-2 text-sm z-50">
 
-          <%= link_to "Payslips",
-            payslip_requests_path,
-            class: "text-sm font-medium text-gray-700 hover:text-indigo-600" %>
+            <% if current_user.admin? %>
+              <%= link_to "Payslip Requests",
+                  admin_payslip_requests_path,
+                  class: "block px-4 py-2 hover:bg-gray-50" %>
 
-          <%= link_to "Apply Leave",
-              new_leave_request_path,
-              class: "text-sm font-medium text-gray-700 hover:text-indigo-600" %>
+              <%= link_to "Attendance Regularizations",
+                  admin_attendance_regularizations_path,
+                  class: "block px-4 py-2 hover:bg-gray-50" %>
+            <% end %>
 
-          <%= link_to "My Leaves",
-              leave_requests_path,
-              class: "text-sm font-medium text-gray-700 hover:text-indigo-600" %>
+            <% if current_user.employee? %>
+              <%= link_to "My Attendance",
+                  attendances_path,
+                  class: "block px-4 py-2 hover:bg-gray-50" %>
 
-          <%= link_to "Monthly Attendances",
-              attendances_path,
-              class: "text-sm font-medium text-gray-700 hover:text-indigo-600" %>
-        <% end %>
+              <%= link_to "Payslips",
+                  payslip_requests_path,
+                  class: "block px-4 py-2 hover:bg-gray-50" %>
 
-        <%= button_to "Logout",
-            destroy_user_session_path,
-            method: :delete,
-            class: "bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600" %>
+              <%= link_to "Apply Leave",
+                  new_leave_request_path,
+                  class: "block px-4 py-2 hover:bg-gray-50" %>
+
+              <%= link_to "My Leaves",
+                  leave_requests_path,
+                  class: "block px-4 py-2 hover:bg-gray-50" %>
+            <% end %>
+          </div>
+        </div>
+
+        <!-- USER DROPDOWN -->
+        <div class="relative" data-controller="dropdown">
+          <button
+            data-action="click->dropdown#toggle"
+            class="flex items-center gap-2 text-sm text-gray-700 hover:text-indigo-600">
+            <span class="font-medium">
+              <%= current_user.email %>
+            </span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          <div
+            data-dropdown-target="menu"
+            class="hidden absolute right-0 mt-2 w-48 bg-white border rounded-xl shadow-lg py-2 text-sm z-50">
+
+            <% if current_user.employee? %>
+              <%= link_to "My Profile",
+                  edit_profile_path,
+                  class: "block px-4 py-2 hover:bg-gray-50" %>
+            <% end %>
+
+            <div class="border-t my-1"></div>
+
+            <%= button_to "Logout",
+                destroy_user_session_path,
+                method: :delete,
+                class: "w-full text-left px-4 py-2 text-red-600 hover:bg-red-50" %>
+          </div>
+        </div>
+
       <% else %>
         <%= link_to "Login",
             new_user_session_path,

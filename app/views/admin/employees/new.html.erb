@@ -1,57 +1,125 @@
-<h1 class="text-2xl font-bold mb-6">Add Employee</h1>
+<div class="max-w-3xl mx-auto">
+  <!-- Header -->
+  <div class="mb-8">
+    <h1 class="text-3xl font-semibold text-gray-900">
+      Add Employee
+    </h1>
+    <p class="mt-1 text-sm text-gray-500">
+      Create a new employee profile and set initial details
+    </p>
+  </div>
 
-<div class="bg-white rounded-xl shadow p-6 max-w-xl">
-  <%= form_with model: @user,
-                url: admin_employees_path,
-                data: { turbo: false },
-                class: "space-y-5" do |f| %>
+  <!-- Card -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+    <%= form_with model: @user,
+                  url: admin_employees_path,
+                  data: { turbo: false },
+                  class: "space-y-8" do |f| %>
 
-    <div>
-      <%= f.label :email, class: "block text-sm font-medium text-gray-700" %>
-      <%= f.email_field :email,
-          class: "mt-1 w-full rounded-lg border-gray-300 focus:ring-indigo-500 focus:border-indigo-500" %>
-    </div>
-
-    <%= fields_for :employee_profile do |ep| %>
+      <!-- Account Section -->
       <div>
-        <%= ep.label :first_name, class: "block text-sm font-medium text-gray-700" %>
-        <%= ep.text_field :first_name,
-            class: "mt-1 w-full rounded-lg border-gray-300" %>
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">
+          Account Information
+        </h2>
+
+        <div>
+          <%= f.label :email,
+              class: "block text-sm font-medium text-gray-700" %>
+          <%= f.email_field :email,
+              placeholder: "employee@company.com",
+              class: input_class %>
+        </div>
       </div>
 
+      <!-- Profile Section -->
       <div>
-        <%= ep.label :last_name, class: "block text-sm font-medium text-gray-700" %>
-        <%= ep.text_field :last_name,
-            class: "mt-1 w-full rounded-lg border-gray-300" %>
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">
+          Employee Details
+        </h2>
+
+        <%= fields_for :employee_profile do |ep| %>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <%= ep.label :first_name,
+                  class: "block text-sm font-medium text-gray-700" %>
+              <%= ep.text_field :first_name,
+                  placeholder: "First name",
+                  class: input_class %>
+            </div>
+
+            <div>
+              <%= ep.label :last_name,
+                  class: "block text-sm font-medium text-gray-700" %>
+              <%= ep.text_field :last_name,
+                  placeholder: "Last name",
+                  class: input_class %>
+            </div>
+
+            <div>
+              <%= ep.label :designation,
+                  class: "block text-sm font-medium text-gray-700" %>
+              <%= ep.text_field :designation,
+                  placeholder: "e.g. Software Engineer",
+                  class: input_class %>
+            </div>
+
+            <div>
+              <%= ep.label :joining_date,
+                  class: "block text-sm font-medium text-gray-700" %>
+              <%= ep.date_field :joining_date,
+                  class: input_class %>
+            </div>
+          </div>
+        <% end %>
       </div>
 
+      <!-- Compensation Section -->
       <div>
-        <%= ep.label :designation, class: "block text-sm font-medium text-gray-700" %>
-        <%= ep.text_field :designation,
-            class: "mt-1 w-full rounded-lg border-gray-300" %>
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">
+          Compensation
+        </h2>
+
+        <%= fields_for :employee_profile do |ep| %>
+          <div class="max-w-sm">
+            <%= ep.label :salary,
+                class: "block text-sm font-medium text-gray-700" %>
+
+            <div class="relative mt-1">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                ₹
+              </span>
+              <%= ep.number_field :salary,
+                  step: 0.01,
+                  placeholder: "0.00",
+                  class: "mt-1 block w-full rounded-xl
+                      bg-gray-50 border border-gray-200
+                      pl-5 py-3 pr-4
+                      text-gray-900 placeholder-gray-400
+                      shadow-sm
+                      focus:bg-white focus:border-indigo-500
+                      focus:ring-2 focus:ring-indigo-500/20
+                      transition" %>
+            </div>
+
+            <p class="mt-1 text-xs text-gray-500">
+              Monthly gross salary
+            </p>
+          </div>
+        <% end %>
       </div>
 
-      <div>
-        <%= ep.label :joining_date, class: "block text-sm font-medium text-gray-700" %>
-        <%= ep.date_field :joining_date,
-            class: "mt-1 w-full rounded-lg border-gray-300" %>
-      </div>
+      <!-- Actions -->
+      <div class="flex items-center justify-end gap-4 pt-6">
+        <%= link_to "Cancel",
+            admin_employees_path,
+            class: "px-5 py-2.5 rounded-xl border border-gray-300
+                    text-gray-600 hover:bg-gray-50" %>
 
-      <div>
-        <%= ep.label :salary, class: "block text-sm font-medium text-gray-700" %>
-        <%= ep.number_field :salary,
-            step: 0.01,
-            class: "mt-1 w-full rounded-lg border-gray-300" %>
+        <%= f.submit "Create Employee",
+            class: "px-6 py-2.5 rounded-xl bg-indigo-600
+                    text-white font-medium hover:bg-indigo-700
+                    transition" %>
       </div>
     <% end %>
-
-    <div class="flex justify-end gap-3">
-      <%= link_to "Cancel",
-          admin_employees_path,
-          class: "px-4 py-2 rounded-lg border border-gray-300 text-gray-600" %>
-
-      <%= f.submit "Create Employee",
-          class: "px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700" %>
-    </div>
-  <% end %>
+  </div>
 </div>

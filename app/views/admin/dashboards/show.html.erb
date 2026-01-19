@@ -1,0 +1,55 @@
+<h2 class="text-2xl font-bold mb-6">Admin Dashboard</h2>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+  <%= render "shared/stat_card",
+      title: "Total Employees",
+      value: @employees_count,
+      color: "indigo",
+      link_present: true %>
+
+  <%= render "shared/stat_card",
+      title: "Today's Attendance",
+      value: @today_attendance,
+      color: "green",
+      link_present: false %>
+
+  <%= render "shared/stat_card",
+      title: "Pending Leave Requests",
+      value: @pending_leaves,
+      color: "yellow",
+      link_present: false %>
+</div>
+
+<div class="mt-10 bg-white rounded-xl shadow p-6">
+  <h3 class="text-lg font-semibold mb-4">Quick Actions</h3>
+
+  <div class="flex flex-wrap gap-4">
+    <%= link_to "Add Employee",
+        new_admin_employee_path,
+        class: "px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700" %>
+
+    <%= link_to "View Attendance",
+        admin_attendances_path,
+        class: "px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700" %>
+
+    <%= link_to "Review Leaves",
+        admin_leave_requests_path,
+        class: "px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600" %>
+
+    <%= link_to "Monthly Attendance Summary",
+        admin_attendance_summaries_path,
+        class: "px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700" %>
+
+    <%= link_to "Payroll",
+        admin_payrolls_path,
+        class: "px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700" %>
+
+    <%= link_to "Payslip Requests",
+        admin_payslip_requests_path,
+        class: "px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700" %>
+
+    <%= link_to "Attendance Regularizations",
+        admin_attendance_regularizations_path,
+        class: "px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700" %>
+  </div>
+</div>

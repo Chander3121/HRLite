@@ -1,0 +1,55 @@
+<h1 class="text-2xl font-bold mb-6">Edit Employee</h1>
+
+<div class="bg-white rounded-xl shadow p-6 max-w-xl">
+  <%= form_with model: @profile,
+                url: admin_employee_path(@user),
+                method: :patch,
+                data: { turbo: false },
+                class: "space-y-5" do |f| %>
+
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <%= f.label :first_name, class: "block text-sm font-medium text-gray-700" %>
+        <%= f.text_field :first_name,
+            class: "mt-1 w-full rounded-lg border-gray-300" %>
+      </div>
+
+      <div>
+        <%= f.label :last_name, class: "block text-sm font-medium text-gray-700" %>
+        <%= f.text_field :last_name,
+            class: "mt-1 w-full rounded-lg border-gray-300" %>
+      </div>
+    </div>
+
+    <div>
+      <%= f.label :designation, class: "block text-sm font-medium text-gray-700" %>
+      <%= f.text_field :designation,
+          class: "mt-1 w-full rounded-lg border-gray-300" %>
+    </div>
+
+    <div>
+      <%= f.label :joining_date, class: "block text-sm font-medium text-gray-700" %>
+      <%= f.date_field :joining_date,
+          class: "mt-1 w-full rounded-lg border-gray-300" %>
+    </div>
+
+    <div>
+      <%= f.label :salary, class: "block text-sm font-medium text-gray-700" %>
+      <%= f.number_field :salary,
+          step: 0.01,
+          class: "mt-1 w-full rounded-lg border-gray-300" %>
+      <p class="mt-1 text-xs text-gray-400">
+        Monthly salary (used for payroll)
+      </p>
+    </div>
+
+    <div class="flex justify-end gap-3">
+      <%= link_to "Cancel",
+          admin_employees_path,
+          class: "px-4 py-2 border rounded-lg text-gray-600" %>
+
+      <%= f.submit "Save Changes",
+          class: "px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700" %>
+    </div>
+  <% end %>
+</div>

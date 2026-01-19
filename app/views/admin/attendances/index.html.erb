@@ -1,0 +1,95 @@
+<h1 class="text-2xl font-bold mb-6">Attendance</h1>
+
+<div class="bg-white rounded-xl shadow p-6 mb-6">
+  <%= form_with url: admin_attendances_path,
+                method: :get,
+                local: true,
+                class: "grid grid-cols-1 md:grid-cols-4 gap-4" do %>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700">
+        Employee
+      </label>
+      <%= select_tag :user_id,
+          options_from_collection_for_select(
+            @users, :id, :email, params[:user_id]
+          ),
+          include_blank: "All",
+          class: "mt-1 w-full rounded-lg border-gray-300" %>
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700">
+        Date
+      </label>
+      <%= date_field_tag :date,
+          params[:date],
+          class: "mt-1 w-full rounded-lg border-gray-300" %>
+    </div>
+
+    <div class="flex items-end gap-2">
+      <%= submit_tag "Filter",
+          class: "px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700" %>
+
+      <%= link_to "Reset",
+          admin_attendances_path,
+          class: "px-4 py-2 border rounded-lg text-gray-600" %>
+    </div>
+
+    <div class="flex items-end justify-end">
+      <%= link_to "Export CSV",
+          export_admin_attendances_path(
+            user_id: params[:user_id],
+            date: params[:date]
+          ),
+          class: "px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700" %>
+    </div>
+  <% end %>
+</div>
+
+<div class="bg-white rounded-xl shadow overflow-hidden">
+  <table class="min-w-full text-sm">
+    <thead class="bg-gray-50">
+      <tr>
+        <th class="px-6 py-3 text-left">Employee</th>
+        <th class="px-6 py-3 text-left">Date</th>
+        <th class="px-6 py-3 text-left">Check In</th>
+        <th class="px-6 py-3 text-left">Check Out</th>
+        <th class="px-6 py-3 text-left">Worked (hrs)</th>
+        <th class="px-6 py-3 text-left">Edit</th>
+      </tr>
+    </thead>
+
+    <tbody class="divide-y">
+      <% @attendances.each do |attendance| %>
+        <tr>
+          <td class="px-6 py-3"><%= attendance.user.email %></td>
+          <td class="px-6 py-3"><%= attendance.date %></td>
+          <td class="px-6 py-3">
+            <%= attendance.check_in&.strftime("%H:%M") || "-" %>
+          </td>
+          <td class="px-6 py-3">
+            <%= attendance.check_out&.strftime("%H:%M") || "-" %>
+          </td>
+          <td class="px-6 py-3">
+            <%= attendance.worked_minutes ?
+                (attendance.worked_minutes / 60.0).round(2) : "-" %>
+          </td>
+          <td class="px-6 py-3">
+            <%= link_to "Edit",
+                edit_admin_attendance_path(attendance),
+                class: "text-indigo-600 hover:underline text-sm" %>
+          </td>
+        </tr>
+      <% end %>
+
+      <% if @attendances.empty? %>
+        <tr>
+          <td colspan="5" class="px-6 py-6 text-center text-gray-500">
+            No attendance records found
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

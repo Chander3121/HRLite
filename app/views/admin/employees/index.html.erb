@@ -1,0 +1,48 @@
+<div class="flex justify-between items-center mb-6">
+  <h1 class="text-2xl font-bold">Employees</h1>
+
+  <%= link_to "Add Employee",
+      new_admin_employee_path,
+      class: "bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700" %>
+</div>
+
+<div class="bg-white rounded-xl shadow overflow-hidden">
+  <table class="min-w-full text-sm">
+    <thead class="bg-gray-50">
+      <tr>
+        <th class="px-6 py-3 text-left">Name</th>
+        <th class="px-6 py-3 text-left">Email</th>
+        <th class="px-6 py-3 text-left">Designation</th>
+        <th class="px-6 py-3 text-left">Joining Date</th>
+        <th class="px-6 py-3 text-left">Salary/Month</th>
+        <th class="px-6 py-3 text-left">Actions</th>
+      </tr>
+    </thead>
+
+    <tbody class="divide-y">
+      <% @employees.each do |employee| %>
+        <tr>
+          <td class="px-6 py-3">
+            <%= employee.employee_profile&.first_name %>
+            <%= employee.employee_profile&.last_name %>
+          </td>
+          <td class="px-6 py-3"><%= employee.email %></td>
+          <td class="px-6 py-3">
+            <%= employee.employee_profile&.designation %>
+          </td>
+          <td class="px-6 py-3">
+            <%= employee.employee_profile&.joining_date %>
+          </td>
+          <td class="px-6 py-3">
+            <%= employee.employee_profile&.salary&.to_f %>
+          </td>
+          <td class="px-6 py-3">
+            <%= link_to "Edit",
+                edit_admin_employee_path(employee),
+                class: "text-indigo-600 hover:underline text-sm" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

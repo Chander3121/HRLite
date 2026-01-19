@@ -1,0 +1,39 @@
+<h1 class="text-2xl font-bold mb-6">Pending Leave Requests</h1>
+
+<div class="bg-white rounded-xl shadow overflow-hidden">
+  <table class="min-w-full text-sm">
+    <thead class="bg-gray-50">
+      <tr>
+        <th class="px-6 py-3 text-left">Employee</th>
+        <th class="px-6 py-3 text-left">Type</th>
+        <th class="px-6 py-3 text-left">Dates</th>
+        <th class="px-6 py-3 text-left">Reason</th>
+        <th class="px-6 py-3 text-left">Action</th>
+      </tr>
+    </thead>
+
+    <tbody class="divide-y">
+      <% @leaves.each do |leave| %>
+        <tr>
+          <td class="px-6 py-3"><%= leave.user.email %></td>
+          <td class="px-6 py-3"><%= leave.leave_type.titleize %></td>
+          <td class="px-6 py-3">
+            <%= leave.start_date %> → <%= leave.end_date %>
+          </td>
+          <td class="px-6 py-3"><%= leave.reason %></td>
+          <td class="px-6 py-3 flex gap-2">
+            <%= button_to "Approve",
+                approve_admin_leave_request_path(leave),
+                method: :patch,
+                class: "px-3 py-1 bg-green-600 text-white rounded-lg hover:bg-green-700" %>
+
+            <%= button_to "Reject",
+                reject_admin_leave_request_path(leave),
+                method: :patch,
+                class: "px-3 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

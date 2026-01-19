@@ -1,0 +1,12 @@
+<p>A new attendance regularization request has been submitted.</p>
+
+<p>
+  Employee: <%= @request.user.email %><br>
+  Date: <%= @request.date %><br>
+  Reason: <%= @request.reason %>
+</p>
+
+<p>
+  <%= link_to "Review Request",
+      admin_attendance_regularizations_url %>
+</p>

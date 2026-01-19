@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  month: 2026-01-19
+  gross_salary: 9.99
+  payable_days: 9.99
+  paid_days: 9.99
+  unpaid_days: 9.99
+  net_salary: 9.99
+
+two:
+  user: two
+  month: 2026-01-19
+  gross_salary: 9.99
+  payable_days: 9.99
+  paid_days: 9.99
+  unpaid_days: 9.99
+  net_salary: 9.99

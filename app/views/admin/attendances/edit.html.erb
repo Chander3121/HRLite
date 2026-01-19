@@ -1,0 +1,38 @@
+<h1 class="text-2xl font-bold mb-6">Edit Attendance</h1>
+
+<div class="bg-white rounded-xl shadow p-6 max-w-xl">
+  <%= form_with model: [:admin, @attendance],
+                data: { turbo: false },
+                class: "space-y-5" do |f| %>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700">
+        Employee
+      </label>
+      <p class="mt-1 text-gray-900"><%= @attendance.user.email %></p>
+    </div>
+
+    <div>
+      <%= f.label :check_in, class: "block text-sm font-medium text-gray-700" %>
+      <%= f.datetime_local_field :check_in,
+          value: @attendance.check_in&.strftime("%Y-%m-%dT%H:%M"),
+          class: "mt-1 w-full rounded-lg border-gray-300" %>
+    </div>
+
+    <div>
+      <%= f.label :check_out, class: "block text-sm font-medium text-gray-700" %>
+      <%= f.datetime_local_field :check_out,
+          value: @attendance.check_out&.strftime("%Y-%m-%dT%H:%M"),
+          class: "mt-1 w-full rounded-lg border-gray-300" %>
+    </div>
+
+    <div class="flex justify-end gap-3">
+      <%= link_to "Cancel",
+          admin_attendances_path,
+          class: "px-4 py-2 border rounded-lg" %>
+
+      <%= f.submit "Save Changes",
+          class: "px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700" %>
+    </div>
+  <% end %>
+</div>

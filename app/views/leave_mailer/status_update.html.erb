@@ -1,0 +1,26 @@
+<p>Hello <%= @user.employee_profile&.first_name || "there" %>,</p>
+
+<p>
+  Your leave request has been
+  <strong><%= @leave.status.titleize %></strong>.
+</p>
+
+<p>
+  <strong>Type:</strong> <%= @leave.leave_type.titleize %><br>
+  <strong>Dates:</strong>
+  <%= @leave.start_date %> → <%= @leave.end_date %>
+</p>
+
+<% if @leave.approved? %>
+  <p style="color: #166534;">
+    Enjoy your time off! 😊
+  </p>
+<% else %>
+  <p style="color: #991b1b;">
+    If you have questions, please contact your administrator.
+  </p>
+<% end %>
+
+<p style="margin-top: 24px;">
+  — HRLite Team
+</p>

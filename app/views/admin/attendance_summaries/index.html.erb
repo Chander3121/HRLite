@@ -1,0 +1,50 @@
+<h1 class="text-2xl font-bold mb-6">Monthly Attendance Summary</h1>
+
+<div class="bg-white rounded-xl shadow p-6 mb-6">
+  <%= form_with url: admin_attendance_summaries_path,
+                method: :get,
+                local: true,
+                class: "flex gap-4 items-end" do %>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Month</label>
+      <%= month_field_tag :month,
+          @month.strftime("%Y-%m"),
+          class: "mt-1 rounded-lg border-gray-300" %>
+    </div>
+
+    <%= submit_tag "View",
+        class: "px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700" %>
+  <% end %>
+</div>
+
+<div class="bg-white rounded-xl shadow overflow-x-auto">
+  <table class="min-w-full text-sm">
+    <thead class="bg-gray-50">
+      <tr>
+        <th class="px-4 py-3 text-left">Employee</th>
+        <th class="px-4 py-3">Present</th>
+        <th class="px-4 py-3">Short</th>
+        <th class="px-4 py-3">Half</th>
+        <th class="px-4 py-3">Weekly Off</th>
+        <th class="px-4 py-3">Holiday</th>
+        <th class="px-4 py-3">Absent</th>
+      </tr>
+    </thead>
+
+    <tbody class="divide-y">
+      <% @users.each do |user| %>
+        <% summary = @summaries[user.id] %>
+        <tr>
+          <td class="px-4 py-3"><%= user.email %></td>
+          <td class="px-4 py-3 text-center"><%= summary[:present] %></td>
+          <td class="px-4 py-3 text-center"><%= summary[:short_working] %></td>
+          <td class="px-4 py-3 text-center"><%= summary[:half_day] %></td>
+          <td class="px-4 py-3 text-center"><%= summary[:weekly_off] %></td>
+          <td class="px-4 py-3 text-center"><%= summary[:holiday] %></td>
+          <td class="px-4 py-3 text-center"><%= summary[:absent] %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

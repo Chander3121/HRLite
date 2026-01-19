@@ -1,0 +1,38 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  username: postgres
+  password: postgres
+  # For details on connection pooling, see Rails configuration guide
+  # https://guides.rubyonrails.org/configuring.html#database-pooling
+  max_connections: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+
+development:
+  <<: *default
+  database: hrlite_development
+  host: localhost
+
+test:
+  <<: *default
+  database: hrlite_test
+  host: localhost
+
+production:
+  primary: &primary_production
+    <<: *default
+    database: hrlite_production
+    username: hrlite
+    password: <%= ENV["HRLITE_DATABASE_PASSWORD"] %>
+  cache:
+    <<: *primary_production
+    database: hrlite_production_cache
+    migrations_paths: db/cache_migrate
+  queue:
+    <<: *primary_production
+    database: hrlite_production_queue
+    migrations_paths: db/queue_migrate
+  cable:
+    <<: *primary_production
+    database: hrlite_production_cable
+    migrations_paths: db/cable_migrate

@@ -1,0 +1,19 @@
+<p>Hello <%= @user.employee_profile&.first_name || @user.email %>,</p>
+
+<p>
+  Your payslip for <strong><%= @month.strftime("%B %Y") %></strong>
+  has been generated.
+</p>
+
+<p>
+  You can download it from:
+</p>
+
+<p>
+  <%= link_to "Download Payslip",
+      payslip_requests_url %>
+</p>
+
+<p>
+  — HRLite Team
+</p>

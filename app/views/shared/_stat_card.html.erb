@@ -1,0 +1,8 @@
+<div class="bg-white p-6 rounded-xl shadow border-l-4 border-<%= color %>-500">
+  <h3 class="text-gray-500 text-sm mb-1"><%= title %></h3>
+  <p class="text-3xl font-bold text-gray-800"><%= value %></p>
+  <% if link_present %>
+    <%= link_to 'View Employees', admin_employees_path%>
+  <% end %>
+</div>
+

@@ -1,0 +1,47 @@
+class Admin::LeaveRequestsController < ApplicationController
+  before_action :ensure_admin
+
+  def index
+    @leaves = LeaveRequest.pending.includes(:user)
+  end
+
+  def approve
+    leave = Leave.find(params[:id])
+
+    ActiveRecord::Base.transaction do
+      days = (leave.end_date - leave.start_date).to_i + 1
+
+      balance = leave.user.leave_balances.find_by!(
+        leave_type: leave.leave_type
+      )
+
+      if balance.remaining < days
+        redirect_to admin_leave_requests_path,
+          alert: "Insufficient leave balance."
+        return
+      end
+
+      balance.update!(used: balance.used + days)
+      leave.update!(status: :approved)
+    end
+
+    LeaveMailer.approved(leave).deliver_later
+
+    redirect_to admin_leave_requests_path,
+      notice: "Leave approved and balance updated."
+  end
+
+  def reject
+    leave.update!(status: :rejected)
+
+    LeaveMailer.status_update(leave).deliver_later
+
+    redirect_to admin_leave_requests_path, alert: "Leave rejected and employee notified."
+  end
+
+  private
+
+  def leave
+    @leave ||= LeaveRequest.find(params[:id])
+  end
+end

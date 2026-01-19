@@ -1,0 +1,47 @@
+<h1 class="text-2xl font-bold mb-6">Payroll</h1>
+
+<div class="bg-white rounded-xl shadow p-6 mb-6">
+  <%= form_with url: admin_payrolls_path,
+                method: :post,
+                local: true,
+                class: "flex gap-4 items-end" do %>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Month</label>
+      <%= month_field_tag :month,
+          @month.strftime("%Y-%m"),
+          class: "mt-1 rounded-lg border-gray-300" %>
+    </div>
+
+    <%= submit_tag "Generate Payroll",
+        class: "px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700" %>
+  <% end %>
+</div>
+
+<div class="bg-white rounded-xl shadow overflow-x-auto">
+  <table class="min-w-full text-sm">
+    <thead class="bg-gray-50">
+      <tr>
+        <th class="px-4 py-3">Employee</th>
+        <th class="px-4 py-3">Paid Days</th>
+        <th class="px-4 py-3">Unpaid Days</th>
+        <th class="px-4 py-3">Gross Salary</th>
+        <th class="px-4 py-3">Net Salary</th>
+      </tr>
+    </thead>
+
+    <tbody class="divide-y">
+      <% @payrolls.each do |payroll| %>
+        <tr>
+          <td class="px-4 py-3 text-center"><%= payroll.user.email %></td>
+          <td class="px-4 py-3 text-center"><%= payroll.paid_days %></td>
+          <td class="px-4 py-3 text-center"><%= payroll.unpaid_days %></td>
+          <td class="px-4 py-3 text-center">₹ <%= payroll.gross_salary %></td>
+          <td class="px-4 py-3 font-semibold text-center">
+            ₹ <%= payroll.net_salary %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

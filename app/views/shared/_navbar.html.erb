@@ -1,0 +1,50 @@
+<nav class="bg-white shadow">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+    <h1 class="text-xl font-bold text-indigo-600"><%= link_to "HRLite", root_path %></h1>
+
+    <div class="flex items-center gap-4">
+      <% if user_signed_in? %>
+        <span class="text-sm text-gray-600">
+          <%= current_user.email %>
+        </span>
+
+        <% if current_user.admin? %>
+          <%= link_to "Payslip Requests",
+            admin_payslip_requests_path,
+            class: "text-sm font-medium text-gray-700 hover:text-indigo-600" %>
+        <% end %>
+
+        <% if current_user.employee? %>
+          <%= link_to "My Profile",
+              edit_profile_path,
+              class: "text-sm font-medium text-gray-700 hover:text-indigo-600" %>
+
+          <%= link_to "Payslips",
+            payslip_requests_path,
+            class: "text-sm font-medium text-gray-700 hover:text-indigo-600" %>
+
+          <%= link_to "Apply Leave",
+              new_leave_request_path,
+              class: "text-sm font-medium text-gray-700 hover:text-indigo-600" %>
+
+          <%= link_to "My Leaves",
+              leave_requests_path,
+              class: "text-sm font-medium text-gray-700 hover:text-indigo-600" %>
+
+          <%= link_to "Monthly Attendances",
+              attendances_path,
+              class: "text-sm font-medium text-gray-700 hover:text-indigo-600" %>
+        <% end %>
+
+        <%= button_to "Logout",
+            destroy_user_session_path,
+            method: :delete,
+            class: "bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600" %>
+      <% else %>
+        <%= link_to "Login",
+            new_user_session_path,
+            class: "text-indigo-600 font-medium hover:underline" %>
+      <% end %>
+    </div>
+  </div>
+</nav>

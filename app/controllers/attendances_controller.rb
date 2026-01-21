@@ -8,7 +8,7 @@ class AttendancesController < ApplicationController
         Date.parse("#{params[:month]}-01") :
         Date.current.beginning_of_month
 
-    @start_date = @month.beginning_of_month
+    @start_date = [@month.beginning_of_month, current_user.employee_profile.joining_date].max
     @end_date   = @month.end_of_month
 
     @records = current_user.attendances
@@ -56,9 +56,8 @@ class AttendancesController < ApplicationController
 
   def build_summary
     attendances = @records.values
-
     @summary = {
-      present: attendances.count { |a| a.present? },
+      present: attendances.count { |a| a.status == "present" },
       short_working: attendances.count { |a| a.short_working? },
       half_day: attendances.count { |a| a.half_day? },
       absent: attendances.count { |a| a.absent? },

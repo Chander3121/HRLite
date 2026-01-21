@@ -82,7 +82,11 @@
     </thead>
 
     <tbody class="divide-y">
-      <% (@month.beginning_of_month..@month.end_of_month).each do |date| %>
+      <%
+        start_date = [@month.beginning_of_month, current_user.employee_profile.joining_date].max
+        end_date   = @month.end_of_month
+      %>
+      <% (start_date..end_date).each do |date| %>
         <% attendance = @records[date] %>
 
         <tr>

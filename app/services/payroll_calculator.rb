@@ -6,10 +6,10 @@ class PayrollCalculator
 
   def call
     attendances = fetch_attendance
-    profile = @user.employee_profile
-    raise "Salary not set for #{@user.email}" if profile.nil? || profile.salary.blank?
+    @profile = @user.employee_profile
+    raise "Salary not set for #{@user.email}" if @profile.nil? || @profile.salary.blank?
 
-    salary = profile.salary.to_f
+    salary = @profile.salary.to_f
 
     total_working_days = working_days_in_month
     per_day_salary = salary / total_working_days
@@ -38,7 +38,7 @@ class PayrollCalculator
   end
 
   def working_days_in_month
-    start_date = @month.beginning_of_month
+    start_date = [@month.beginning_of_month, @profile.joining_date].max
     end_date = @month.end_of_month
 
     (start_date..end_date).count do |date|

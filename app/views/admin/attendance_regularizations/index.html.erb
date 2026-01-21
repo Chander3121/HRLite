@@ -1,33 +1,42 @@
 <h1 class="text-2xl font-bold mb-6">Attendance Regularizations</h1>
 
-<table class="min-w-full bg-white rounded-xl shadow text-sm">
-  <thead class="bg-gray-50">
-    <tr>
-      <th class="px-6 py-3">Employee</th>
-      <th class="px-6 py-3">Date</th>
-      <th class="px-6 py-3">Reason</th>
-      <th class="px-6 py-3">Action</th>
-    </tr>
-  </thead>
-
-  <tbody class="divide-y">
-    <% @requests.each do |r| %>
+<div class="bg-white rounded-xl shadow overflow-hidden">
+  <table class="min-w-full text-sm">
+    <thead class="bg-gray-50">
       <tr>
-        <td class="px-6 py-3 text-center"><%= r.user.email %></td>
-        <td class="px-6 py-3 text-center"><%= r.date %></td>
-        <td class="px-6 py-3 text-center"><%= r.reason %></td>
-        <td class="px-6 py-3 justify-center flex gap-2">
-          <%= button_to "Approve",
-              admin_attendance_regularization_path(r, approve: true),
-              method: :patch,
-              class: "px-3 py-1 bg-green-600 text-white rounded" %>
-
-          <%= button_to "Reject",
-              admin_attendance_regularization_path(r),
-              method: :patch,
-              class: "px-3 py-1 bg-red-600 text-white rounded" %>
-        </td>
+        <th class="px-6 py-3">Employee</th>
+        <th class="px-6 py-3">Date</th>
+        <th class="px-6 py-3">Reason</th>
+        <th class="px-6 py-3">Action</th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+
+    <tbody class="divide-y">
+      <% @requests.each do |r| %>
+        <tr>
+          <td class="px-6 py-3 text-center"><%= r.user.email %></td>
+          <td class="px-6 py-3 text-center"><%= r.date %></td>
+          <td class="px-6 py-3 text-center"><%= r.reason %></td>
+          <td class="px-6 py-3 justify-center flex gap-2">
+            <%= button_to "Approve",
+                admin_attendance_regularization_path(r, approve: true),
+                method: :patch,
+                class: "px-3 py-1 bg-green-600 text-white rounded" %>
+
+            <%= button_to "Reject",
+                admin_attendance_regularization_path(r),
+                method: :patch,
+                class: "px-3 py-1 bg-red-600 text-white rounded" %>
+          </td>
+        </tr>
+      <% end %>
+      <% if @requests.empty? %>
+        <tr>
+          <td colspan="4" class="px-6 py-6 text-center text-gray-500">
+            No attendance regularization requests.
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

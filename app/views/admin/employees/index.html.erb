@@ -43,6 +43,13 @@
           </td>
         </tr>
       <% end %>
+      <% if @employees.empty? %>
+        <tr>
+          <td colspan="6" class="px-6 py-6 text-center text-gray-500">
+            No employees found.
+          </td>
+        </tr>
+      <% end %>
     </tbody>
   </table>
 </div>

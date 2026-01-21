@@ -42,6 +42,13 @@
           </td>
         </tr>
       <% end %>
+      <% if @payrolls.empty? %>
+        <tr>
+          <td colspan="4" class="px-6 py-6 text-center text-gray-500">
+            No payroll records found for the selected month.
+          </td>
+        </tr>
+      <% end %>
     </tbody>
   </table>
 </div>

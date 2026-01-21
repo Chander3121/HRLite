@@ -114,7 +114,7 @@
             <% end %>
           </td>
           <td class="px-4 py-2">
-            <% if attendance.nil? || attendance.absent? %>
+            <% if !["Sunday", "Saturday"].include?(date.strftime("%A")) && (attendance.nil? || attendance.absent?) %>
               <%= link_to "Regularize",
                   new_attendance_regularization_path(date: date),
                   class: "text-indigo-600 text-sm hover:underline" %>

@@ -61,6 +61,7 @@ group :development do
   gem "web-console"
   gem "pry"
   gem "letter_opener"
+  gem "bullet"
 end
 
 group :test do
@@ -72,3 +73,7 @@ end
 gem "devise"
 gem "csv"
 gem "prawn"
+
+gem "sidekiq"
+gem "sidekiq-cron"
+

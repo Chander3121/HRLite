@@ -51,31 +51,42 @@
   <table class="min-w-full text-sm">
     <thead class="bg-gray-50">
       <tr>
-        <th class="px-6 py-3 text-left">Employee</th>
-        <th class="px-6 py-3 text-left">Date</th>
-        <th class="px-6 py-3 text-left">Check In</th>
-        <th class="px-6 py-3 text-left">Check Out</th>
-        <th class="px-6 py-3 text-left">Worked (hrs)</th>
-        <th class="px-6 py-3 text-left">Edit</th>
+        <th class="px-6 py-3">Employee</th>
+        <th class="px-6 py-3">Date</th>
+        <th class="px-6 py-3">Check In</th>
+        <th class="px-6 py-3">Check Out</th>
+        <th class="px-6 py-3">Worked (hrs)</th>
+        <th class="px-6 py-3">Status</th>
+        <th class="px-6 py-3">Edit</th>
       </tr>
     </thead>
 
     <tbody class="divide-y">
       <% @attendances.each do |attendance| %>
         <tr>
-          <td class="px-6 py-3"><%= attendance.user.email %></td>
-          <td class="px-6 py-3"><%= attendance.date %></td>
-          <td class="px-6 py-3">
+          <td class="px-6 py-3 text-center"><%= attendance.user.email %></td>
+          <td class="px-6 py-3 text-center"><%= attendance.date.strftime("%d %b %Y") %></td>
+          <td class="px-6 py-3 text-center">
             <%= attendance.check_in&.strftime("%I:%M %p") || "—" %>
           </td>
-          <td class="px-6 py-3">
+          <td class="px-6 py-3 text-center">
             <%= attendance.check_out&.strftime("%I:%M %p") || "—" %>
           </td>
-          <td class="px-6 py-3">
+          <td class="px-6 py-3 text-center">
             <%= attendance.worked_minutes ?
                 (attendance.worked_minutes / 60.0).round(2) : "-" %>
           </td>
-          <td class="px-6 py-3">
+          <td class="px-4 py-2 text-center">
+            <% if attendance %>
+              <span class="px-2 py-1 rounded-full text-xs font-medium
+                <%= attendance_status_color(attendance.status) %>">
+                <%= attendance.status.titleize %>
+              </span>
+            <% else %>
+              —
+            <% end %>
+          </td>
+          <td class="px-6 py-3 text-center">
             <%= link_to "Edit",
                 edit_admin_attendance_path(attendance),
                 class: "text-indigo-600 hover:underline text-sm" %>

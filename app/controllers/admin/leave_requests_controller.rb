@@ -6,7 +6,7 @@ class Admin::LeaveRequestsController < ApplicationController
   end
 
   def approve
-    leave = Leave.find(params[:id])
+    leave = LeaveRequest.find(params[:id])
 
     ActiveRecord::Base.transaction do
       days = (leave.end_date - leave.start_date).to_i + 1
@@ -25,7 +25,7 @@ class Admin::LeaveRequestsController < ApplicationController
       leave.update!(status: :approved)
     end
 
-    LeaveMailer.approved(leave).deliver_later
+    LeaveMailer.status_update(leave).deliver_later
 
     redirect_to admin_leave_requests_path,
       notice: "Leave approved and balance updated."

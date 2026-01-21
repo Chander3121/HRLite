@@ -25,5 +25,6 @@ module Hrlite
     config.time_zone = "Asia/Kolkata"
     config.active_record.default_timezone = :utc
     # config.eager_load_paths << Rails.root.join("extras")
+    config.active_job.queue_adapter = :sidekiq
   end
 end

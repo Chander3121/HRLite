@@ -13,10 +13,10 @@
   <tbody class="divide-y">
     <% @requests.each do |r| %>
       <tr>
-        <td class="px-6 py-3"><%= r.user.email %></td>
-        <td class="px-6 py-3"><%= r.date %></td>
-        <td class="px-6 py-3"><%= r.reason %></td>
-        <td class="px-6 py-3 flex gap-2">
+        <td class="px-6 py-3 text-center"><%= r.user.email %></td>
+        <td class="px-6 py-3 text-center"><%= r.date %></td>
+        <td class="px-6 py-3 text-center"><%= r.reason %></td>
+        <td class="px-6 py-3 justify-center flex gap-2">
           <%= button_to "Approve",
               admin_attendance_regularization_path(r, approve: true),
               method: :patch,

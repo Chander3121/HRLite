@@ -74,10 +74,14 @@
           Checked In
         </button>
       <% else %>
+        <% current_hour = Time.current.hour %>
+        <% disabled_time = current_hour >= 15 || current_hour < 9 %>
+
         <%= button_to "Check In",
-            check_in_attendances_path,
-            method: :post,
-            class: "px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700" %>
+              check_in_attendances_path,
+              method: :post,
+              disabled: disabled_time,
+              class: "px-4 py-2 rounded-lg text-white #{disabled_time ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700'}" %>
       <% end %>
 
       <% if @today_attendance&.check_out.present? %>
@@ -100,7 +104,7 @@
     </div>
 
     <div class="mt-8 bg-white rounded-xl shadow p-6">
-      <h3 class="text-lg font-semibold mb-4">Leave Balance</h3>
+      <h3 class="text-lg font-semibold mb-4">Leave Bucket</h3>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <% current_user.leave_balances.each do |balance| %>

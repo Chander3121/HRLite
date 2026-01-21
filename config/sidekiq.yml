@@ -1,0 +1,12 @@
+:concurrency: 5
+:queues:
+  - default
+
+:schedule:
+  create_weekend_attendance:
+    cron: "0 0 * * 6"   # Every Saturday at 12:01 AM
+    class: "CreateWeekendAttendanceJob"
+
+  mark_absent_daily:
+    cron: "0 20 * * 1-5" # Mon–Fri at 8:00 PM
+    class: "AbsentMarkJob"

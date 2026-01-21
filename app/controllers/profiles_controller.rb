@@ -34,7 +34,10 @@ class ProfilesController < ApplicationController
       :dob,
       :gender,
       :address,
-      :profile_picture
+      :profile_picture,
+      :emergency_contact_name,
+      :emergency_contact_phone,
+      :blood_group
     )
   end
 end

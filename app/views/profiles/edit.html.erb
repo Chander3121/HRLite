@@ -1,21 +1,55 @@
 <div class="w-full">
   <!-- Header -->
-  <div class="mb-8">
+  <div class="mb-10">
     <h1 class="text-3xl font-semibold text-gray-900">
       My Profile
     </h1>
     <p class="mt-1 text-sm text-gray-500">
-      Update your personal information
+      Manage your personal information and contact details
     </p>
   </div>
 
-  <!-- Card -->
+  <!-- Profile Summary (Read-only) -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-10">
+    <h2 class="text-lg font-semibold text-gray-900 mb-4">
+      Employment Information
+    </h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
+      <div>
+        <p class="text-gray-500">Employee ID</p>
+        <p class="font-medium text-gray-900"><%= @profile.emp_id %></p>
+      </div>
+
+      <div>
+        <p class="text-gray-500">Designation</p>
+        <p class="font-medium text-gray-900"><%= @profile.designation %></p>
+      </div>
+
+      <div>
+        <p class="text-gray-500">Employment Type</p>
+        <p class="font-medium text-gray-900"><%= @profile.employment_type&.titleize %></p>
+      </div>
+
+      <div>
+        <p class="text-gray-500">Status</p>
+        <p class="font-medium text-gray-900"><%= @profile.status&.titleize %></p>
+      </div>
+
+      <div>
+        <p class="text-gray-500">Salary</p>
+        <p class="font-medium text-gray-900">₹ <%= @profile.salary || "—" %></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Editable Form -->
   <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
     <%= form_with model: @profile,
                   url: profile_path,
                   method: :patch,
                   data: { turbo: false },
-                  class: "space-y-8" do |f| %>
+                  class: "space-y-10" do |f| %>
 
       <!-- BASIC INFO -->
       <section>
@@ -25,8 +59,11 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <%= f.label :first_name, class: "block text-sm font-medium" %>
+            <%= f.label :first_name, class: "block text-sm font-medium" do %>
+              First name <span class="text-red-500">*</span>
+            <% end %>
             <%= f.text_field :first_name,
+                required: true,
                 placeholder: "First name",
                 class: input_class %>
           </div>
@@ -50,8 +87,12 @@
           <div>
             <%= f.label :phone, class: "block text-sm font-medium" %>
             <%= f.telephone_field :phone,
+                minlength: 10,
                 placeholder: "9876543210",
                 class: input_class %>
+            <p class="mt-1 text-xs text-gray-400">
+              Minimum 10 digits
+            </p>
           </div>
 
           <div>
@@ -68,10 +109,47 @@
           </div>
 
           <div>
-            <%= f.label :profile_picture, class: "block text-sm font-medium" %>
-            <%= f.file_field :profile_picture,
-                class: "mt-1 block w-full text-sm text-gray-600" %>
+            <%= f.label :blood_group, class: "block text-sm font-medium" %>
+            <%= f.text_field :blood_group,
+                placeholder: "B+",
+                class: input_class %>
           </div>
+
+          <div>
+            <%= f.label :emergency_contact_name, class: "block text-sm font-medium" %>
+            <%= f.text_field :emergency_contact_name,
+                placeholder: "Contact person name",
+                class: input_class %>
+          </div>
+
+          <div>
+            <%= f.label :emergency_contact_phone, class: "block text-sm font-medium" %>
+            <%= f.telephone_field :emergency_contact_phone,
+                placeholder: "9876543210",
+                class: input_class %>
+          </div>
+        </div>
+      </section>
+
+      <!-- PROFILE PICTURE -->
+      <section>
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">
+          Profile Picture
+        </h2>
+
+        <div class="max-w-md">
+          <%= f.file_field :profile_picture,
+              accept: "image/png,image/jpeg,image/svg+xml,image/webp,image/gif",
+              class: "w-full text-slate-500 font-medium text-sm bg-white border
+                      file:cursor-pointer cursor-pointer
+                      file:border-0 file:py-3 file:px-4 file:mr-4
+                      file:bg-gray-100 file:text-slate-500
+                      hover:file:bg-gray-200
+                      rounded" %>
+
+          <p class="mt-2 text-xs text-gray-500">
+            PNG, JPG, SVG, WEBP, or GIF. Max size 2MB.
+          </p>
         </div>
       </section>
 
@@ -87,9 +165,9 @@
             class: input_class %>
       </section>
 
-      <!-- INFO NOTE -->
+      <!-- NOTE -->
       <div class="rounded-xl bg-gray-50 p-4 text-sm text-gray-600">
-        Salary, designation, employment type, and employee ID can only be updated by HR/Admin.
+        Employee ID, salary, designation, employment type, and status are managed by HR/Admin.
       </div>
 
       <!-- ACTIONS -->

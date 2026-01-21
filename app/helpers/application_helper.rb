@@ -1,5 +1,4 @@
 module ApplicationHelper
-  # include IconHelper
   include Heroicon::Engine.helpers
   def attendance_status_color(status)
     case status

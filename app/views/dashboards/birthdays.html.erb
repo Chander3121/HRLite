@@ -1,0 +1,91 @@
+<div class="mb-10">
+  <h1 class="text-3xl font-semibold text-gray-900">
+    🎉 Birthdays
+  </h1>
+  <p class="mt-1 text-sm text-gray-500">
+    Celebrate your teammates
+  </p>
+</div>
+
+<!-- TODAY'S BIRTHDAYS -->
+<div class="mb-12">
+  <h2 class="text-lg font-semibold text-gray-900 mb-4">
+    🎂 Today
+  </h2>
+
+  <% if @today_birthdays.any? %>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <% @today_birthdays.each do |profile| %>
+        <div class="bg-gradient-to-r from-pink-50 to-purple-50
+                    rounded-xl shadow p-6 text-center">
+          <% if profile.profile_picture.attached? %>
+            <%= image_tag profile.profile_picture,
+                class: "mx-auto h-16 w-16 rounded-full object-cover mb-3" %>
+          <% else %>
+            <div class="mx-auto h-16 w-16 rounded-full bg-gray-200
+                        flex items-center justify-center text-gray-500 mb-3">
+              <%= profile.first_name.first %>
+            </div>
+          <% end %>
+
+          <h3 class="font-semibold text-gray-900">
+            <%= profile.first_name %> <%= profile.last_name %>
+          </h3>
+
+          <p class="text-sm text-gray-500">
+            <%= profile.designation %>
+          </p>
+
+          <p class="mt-2 text-sm text-pink-600 font-medium">
+            🎉 Happy Birthday!
+          </p>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <p class="text-sm text-gray-500">
+      No birthdays today.
+    </p>
+  <% end %>
+</div>
+
+<!-- UPCOMING BIRTHDAYS -->
+<div>
+  <h2 class="text-lg font-semibold text-gray-900 mb-4">
+    📅 Upcoming This Year
+  </h2>
+
+  <% if @upcoming_birthdays.any? %>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <% @upcoming_birthdays.each do |profile| %>
+        <div class="bg-white rounded-xl shadow p-5 flex items-center gap-4">
+          <% if profile.profile_picture.attached? %>
+            <%= image_tag profile.profile_picture.variant(resize_to_fill: [60, 60]),
+                class: "rounded-full object-cover" %>
+          <% else %>
+            <div class="h-12 w-12 rounded-full bg-gray-200
+                        flex items-center justify-center text-gray-500">
+              <%= profile.first_name.first %>
+            </div>
+          <% end %>
+
+          <div>
+            <p class="font-medium text-gray-900">
+              <%= profile.first_name %> <%= profile.last_name %>
+            </p>
+            <p class="text-sm text-gray-500">
+              <%= profile.designation %>
+            </p>
+            <p class="text-xs text-indigo-600">
+              <%= profile.dob.strftime("%d %B") %>
+            </p>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <p class="text-sm text-gray-500">
+      No upcoming birthdays this year.
+    </p>
+  <% end %>
+</div>

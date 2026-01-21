@@ -1,5 +1,6 @@
 module ApplicationHelper
-  include IconHelper
+  # include IconHelper
+  include Heroicon::Engine.helpers
   def attendance_status_color(status)
     case status
     when "present"
@@ -35,5 +36,21 @@ module ApplicationHelper
       user.email.split("@").first.capitalize
 
     "#{greeting_message}, #{name}"
+  end
+
+  def sidebar_link(label, path, icon)
+    active = current_page?(path)
+
+    link_to path,
+      class: "flex items-center gap-3 px-3 py-2 rounded-lg
+              #{active ? 'bg-indigo-50 text-indigo-700 font-medium'
+                        : 'text-gray-700 hover:bg-gray-100'}" do
+      concat heroicon(
+        icon,
+        variant: :outline,
+        options: { class: "h-5 w-5 text-gray-500" }
+      )
+      concat content_tag(:span, label)
+    end
   end
 end

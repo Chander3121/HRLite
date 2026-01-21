@@ -1,154 +1,136 @@
-<div class="mb-8 flex items-center justify-between">
-  <div>
-    <h2 class="text-3xl font-semibold text-gray-900">
-      <%= dashboard_greeting(current_user) %> 👋
-    </h2>
-    <p class="mt-1 text-sm text-gray-500">
-      Here’s what’s happening today
+<!-- GREETING -->
+<div class="mb-10">
+  <h1 class="text-3xl font-semibold text-gray-900">
+    <%= dashboard_greeting(current_user) %> 👋
+  </h1>
+  <p class="mt-1 text-sm text-gray-500">
+    Here’s a snapshot of your journey at HRLite
+  </p>
+</div>
+
+<% profile = current_user.employee_profile %>
+
+<!-- KEY STATS -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+  <div class="bg-white rounded-xl shadow p-6">
+    <p class="text-sm text-gray-500">Employee ID</p>
+    <p class="mt-1 text-xl font-semibold text-gray-900">
+      <%= profile.emp_id %>
+    </p>
+  </div>
+
+  <div class="bg-white rounded-xl shadow p-6">
+    <p class="text-sm text-gray-500">Designation</p>
+    <p class="mt-1 text-xl font-semibold text-gray-900">
+      <%= profile.designation %>
+    </p>
+  </div>
+
+  <div class="bg-white rounded-xl shadow p-6">
+    <p class="text-sm text-gray-500">Working Since</p>
+    <p class="mt-1 text-xl font-semibold text-gray-900">
+      <%= profile.joining_date.strftime("%d %b %Y") %>
+    </p>
+  </div>
+
+  <div class="bg-white rounded-xl shadow p-6">
+    <p class="text-sm text-gray-500">Tenure</p>
+    <p class="mt-1 text-xl font-semibold text-gray-900">
+      <%= distance_of_time_in_words(profile.joining_date, Date.current) %>
     </p>
   </div>
 </div>
 
-<h2 class="text-2xl font-bold mb-6">My Dashboard</h2>
+<!-- LEAVE SUMMARY -->
+<div class="bg-white rounded-xl shadow p-6 mb-12">
+  <h2 class="text-lg font-semibold text-gray-900 mb-4">
+    Leave Bucket
+  </h2>
 
-<% if Date.current.saturday? || Date.current.sunday? %>
-  <div class="bg-blue-100 text-blue-700 px-4 py-2 rounded-lg mb-4">
-    💤 Weekly Off (Saturday / Sunday)
-  </div>
-<% elsif Holiday.exists?(date: Date.current) %>
-  <div class="bg-purple-100 text-purple-700 px-4 py-2 rounded-lg mb-4">
-    🎉 Holiday
-  </div>
-<% else %>
-  <div class="mt-8 bg-white rounded-xl shadow p-6">
-    <h3 class="text-lg font-semibold mb-4">Today's Attendance</h3>
-
-    <% attendance = @today_attendance %>
-
-    <% if attendance %>
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-        <div>
-          <p class="text-gray-500">Check In</p>
-          <p class="font-medium">
-            <%= attendance.check_in&.strftime("%I:%M %p") || "—" %>
-          </p>
-        </div>
-
-        <div>
-          <p class="text-gray-500">Check Out</p>
-          <p class="font-medium">
-            <%= attendance.check_out&.strftime("%I:%M %p") || "—" %>
-          </p>
-        </div>
-
-        <div>
-          <p class="text-gray-500">Worked Hours</p>
-          <p class="font-medium">
-            <%= (attendance.worked_minutes.to_f / 60).round(2) rescue "—" %>
-          </p>
-        </div>
-
-        <div>
-          <p class="text-gray-500">Status</p>
-          <span class="px-2 py-1 rounded-full text-xs font-medium
-            <%= attendance_status_color(attendance.status) %>">
-            <%= attendance.status.titleize %>
-          </span>
-        </div>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <% current_user.leave_balances.each do |balance| %>
+      <div class="border rounded-lg p-4 text-center">
+        <p class="text-sm text-gray-500">
+          <%= balance.leave_type.titleize %>
+        </p>
+        <p class="text-2xl font-bold text-indigo-600">
+          <%= balance.remaining %>
+        </p>
+        <p class="text-xs text-gray-400">
+          of <%= balance.total %> days remaining
+        </p>
       </div>
-    <% else %>
-      <p class="text-gray-500 text-sm">
-        No attendance recorded for today.
-      </p>
     <% end %>
   </div>
+</div>
 
-  <div class="mt-10 bg-white rounded-xl shadow p-6">
-    <h3 class="text-lg font-semibold mb-4">Mark Attendance</h3>
+<!-- ATTENDANCE & WORK -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+  <div class="bg-white rounded-xl shadow p-6">
+    <h2 class="text-lg font-semibold mb-4">📅 Attendance Overview</h2>
 
-    <div class="flex gap-4">
-      <% if @today_attendance&.check_in.present? %>
-        <button
-          class="px-4 py-2 bg-gray-400 text-white rounded-lg cursor-not-allowed"
-          disabled>
-          Checked In
-        </button>
-      <% else %>
-        <% current_hour = Time.current.hour %>
-        <% disabled_time = current_hour >= 15 || current_hour < 9 %>
+    <p class="text-sm text-gray-500">Days Worked</p>
+    <p class="text-2xl font-semibold text-gray-900">
+      <%= current_user.attendances.where(status: "present").count %>
+    </p>
 
-        <%= button_to "Check In",
-              check_in_attendances_path,
-              method: :post,
-              disabled: disabled_time,
-              class: "px-4 py-2 rounded-lg text-white #{disabled_time ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700'}" %>
-      <% end %>
-
-      <% if @today_attendance&.check_out.present? %>
-        <button
-          class="px-4 py-2 bg-gray-400 text-white rounded-lg cursor-not-allowed"
-          disabled>
-          Checked Out
-        </button>
-      <% elsif @today_attendance&.check_in.present? %>
-        <%= button_to "Check Out",
-            check_out_attendances_path,
-            method: :post,
-            class: "px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700" %>
-      <% end %>
-
-      <%= button_to "Monthly Tracker",
-          attendances_path,
-          method: :get,
-          class: "px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700" %>
-    </div>
-
-    <div class="mt-8 bg-white rounded-xl shadow p-6">
-      <h3 class="text-lg font-semibold mb-4">Leave Bucket</h3>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <% current_user.leave_balances.each do |balance| %>
-          <div class="border rounded-lg p-4 text-center">
-            <p class="text-sm text-gray-500">
-              <%= balance.leave_type.titleize %>
-            </p>
-            <p class="text-2xl font-bold text-indigo-600">
-              <%= balance.remaining %>
-            </p>
-            <p class="text-xs text-gray-400">
-              of <%= balance.total %> days
-            </p>
-          </div>
-        <% end %>
-      </div>
-    </div>
-
-    <div class="mt-8 bg-white rounded-xl shadow p-6">
-      <h3 class="text-lg font-semibold mb-4">Leave</h3>
-
-      <div class="flex gap-4">
-        <%= link_to "Apply Leave",
-            new_leave_request_path,
-            class: "px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700" %>
-
-        <%= link_to "My Leaves",
-            leave_requests_path,
-            class: "px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50" %>
-      </div>
-    </div>
-
-    <div class="mt-8 bg-white rounded-xl shadow p-6">
-      <h3 class="text-lg font-semibold mb-4">Payslips</h3>
-
-      <div class="flex gap-4">
-        <%= link_to "Request Payslip",
-            new_payslip_request_path,
-            class: "px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700" %>
-
-        <%= link_to "My Payslip Requests",
-            payslip_requests_path,
-            class: "px-4 py-2 border rounded-lg text-gray-700 hover:bg-gray-50" %>
-      </div>
-    </div>
+    <p class="mt-4 text-sm text-gray-500">Total Working Days</p>
+    <p class="text-xl font-semibold text-gray-900">
+      <%= current_user.attendances.count %>
+    </p>
   </div>
-<% end %>
+
+  <div class="bg-white rounded-xl shadow p-6">
+    <h2 class="text-lg font-semibold mb-4">⏱ Work Summary</h2>
+
+    <% total_minutes = current_user.attendances.sum(:worked_minutes) %>
+
+    <p class="text-sm text-gray-500">Total Hours Worked</p>
+    <p class="text-2xl font-semibold text-gray-900">
+      <%= (total_minutes.to_f / 60).round(1) %> hrs
+    </p>
+
+    <p class="mt-4 text-sm text-gray-500">Average Hours / Day</p>
+    <p class="text-xl font-semibold text-gray-900">
+      <%= (total_minutes.to_f / 60 / [current_user.attendances.count, 1].max).round(1) %> hrs
+    </p>
+  </div>
+</div>
+
+<!-- AWARDS & RECOGNITION -->
+<div class="bg-white rounded-xl shadow p-6 mb-12">
+  <h2 class="text-lg font-semibold text-gray-900 mb-4">
+    🏆 Achievements & Recognition
+  </h2>
+
+  <% if profile.respond_to?(:awards) && profile.awards.any? %>
+    <ul class="list-disc pl-5 text-sm text-gray-700">
+      <% profile.awards.each do |award| %>
+        <li><%= award.title %> — <%= award.awarded_on.strftime("%b %Y") %></li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p class="text-sm text-gray-500">
+      No awards recorded yet. Keep going — great work gets noticed 👏
+    </p>
+  <% end %>
+</div>
+
+<!-- MOTIVATION -->
+<div class="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl p-8 text-center">
+  <% quotes = [
+    "Your growth is as important as the company’s growth.",
+    "Consistency builds careers.",
+    "Great work happens one day at a time.",
+    "Every contribution counts.",
+    "Progress, not perfection."
+  ] %>
+
+  <p class="text-lg font-medium text-gray-800 italic">
+    “<%= quotes.sample %>”
+  </p>
+
+  <p class="mt-3 text-sm text-gray-500">
+    — HRLite
+  </p>
+</div>

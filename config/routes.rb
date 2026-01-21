@@ -15,7 +15,11 @@ Rails.application.routes.draw do
   root "dashboards#show"
 
   # EMPLOYEE ROUTES STARTS HERE
-  resource :dashboard, only: [ :show ]
+  get "/verify/:emp_id", to: "employees#verify", as: :verify_employee
+
+  resource :dashboard, only: [ :show ] do
+    get :birthdays
+  end
 
   resources :leave_requests, only: [ :index, :new, :create ]
 
@@ -26,7 +30,11 @@ Rails.application.routes.draw do
     end
   end
 
-  resource :profile, only: [ :edit, :update ]
+  resource :profile, only: [ :edit, :update ] do
+    collection do
+      get :my_id_card
+    end
+  end
   resources :payslip_requests, only: [ :index, :new, :create ]
   resources :attendance_regularizations, only: [ :index, :new, :create ]
   # EMPLOYEE ROUTES ENDS HERE

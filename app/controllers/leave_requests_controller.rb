@@ -1,6 +1,8 @@
 class LeaveRequestsController < ApplicationController
   before_action :ensure_employee
 
+  layout "dashboard"
+
   def index
     @leaves = current_user.leave_requests.order(created_at: :desc)
   end

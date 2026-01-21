@@ -67,8 +67,25 @@ module Admin
     end
 
     def profile_params
-      params.require(:employee_profile)
-            .permit(:first_name, :last_name, :designation, :joining_date, :salary)
+      params.require(:employee_profile).permit(
+        :first_name,
+        :last_name,
+        :designation,
+        :joining_date,
+        :salary,
+        :emp_id,
+        :phone,
+        :dob,
+        :age,
+        :gender,
+        :blood_group,
+        :address,
+        :emergency_contact_name,
+        :emergency_contact_phone,
+        :employment_type,
+        :status,
+        :profile_picture
+      )
     end
   end
 end

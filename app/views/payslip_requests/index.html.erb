@@ -1,33 +1,44 @@
-<h1 class="text-2xl font-bold mb-6">Payslip Requests</h1>
+<div class="flex justify-between items-center mb-6">
+  <h1 class="text-2xl font-bold">Payslip Requests</h1>
 
-<%= link_to "Request Payslip",
-    new_payslip_request_path,
-    class: "mb-4 inline-block bg-indigo-600 text-white px-4 py-2 rounded-lg" %>
+  <%= link_to "Request Payslip",
+      new_payslip_request_path,
+      class: "bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700" %>
+</div>
 
-<table class="min-w-full bg-white rounded-xl shadow text-sm">
-  <thead class="bg-gray-50">
-    <tr>
-      <th class="px-6 py-3 text-left">Month</th>
-      <th class="px-6 py-3 text-left">Status</th>
-      <th class="px-6 py-3 text-left">Download</th>
-    </tr>
-  </thead>
-
-  <tbody class="divide-y">
-    <% @requests.each do |req| %>
+<div class="bg-white rounded-xl shadow overflow-hidden">
+  <table class="min-w-full text-sm">
+    <thead class="bg-gray-50">
       <tr>
-        <td class="px-6 py-3"><%= req.month.strftime("%B %Y") %></td>
-        <td class="px-6 py-3"><%= req.status.titleize %></td>
-        <td class="px-6 py-3">
-          <% if req.generated? && req.file.attached? %>
-            <%= link_to "Download",
-                rails_blob_path(req.file, disposition: :attachment),
-                class: "text-indigo-600 hover:underline" %>
-          <% else %>
-            —
-          <% end %>
-        </td>
+        <th class="px-6 py-3 text-left">Month</th>
+        <th class="px-6 py-3 text-left">Status</th>
+        <th class="px-6 py-3 text-left">Download</th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+
+    <tbody class="divide-y">
+      <% @requests.each do |req| %>
+        <tr>
+          <td class="px-6 py-3"><%= req.month.strftime("%B %Y") %></td>
+          <td class="px-6 py-3"><%= req.status.titleize %></td>
+          <td class="px-6 py-3">
+            <% if req.generated? && req.file.attached? %>
+              <%= link_to "Download",
+                  rails_blob_path(req.file, disposition: :attachment),
+                  class: "text-indigo-600 hover:underline" %>
+            <% else %>
+              —
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+      <% if @requests.empty? %>
+        <tr>
+          <td colspan="4" class="px-6 py-6 text-center text-gray-500">
+            No payslip requests found.
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

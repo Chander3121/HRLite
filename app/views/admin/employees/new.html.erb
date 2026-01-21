@@ -1,4 +1,4 @@
-<div class="max-w-3xl mx-auto">
+<div class="max-w-4xl mx-auto">
   <!-- Header -->
   <div class="mb-8">
     <h1 class="text-3xl font-semibold text-gray-900">
@@ -14,25 +14,22 @@
     <%= form_with model: @user,
                   url: admin_employees_path,
                   data: { turbo: false },
-                  class: "space-y-8" do |f| %>
+                  class: "space-y-10" do |f| %>
 
-      <!-- Account Section -->
-      <div>
+      <!-- ACCOUNT -->
+      <section>
         <h2 class="text-lg font-semibold text-gray-900 mb-4">
           Account Information
         </h2>
 
-        <div>
-          <%= f.label :email,
-              class: "block text-sm font-medium text-gray-700" %>
-          <%= f.email_field :email,
-              placeholder: "employee@company.com",
-              class: input_class %>
-        </div>
-      </div>
+        <%= f.label :email, class: "block text-sm font-medium text-gray-700" %>
+        <%= f.email_field :email,
+            placeholder: "employee@company.com",
+            class: input_class %>
+      </section>
 
-      <!-- Profile Section -->
-      <div>
+      <!-- EMPLOYEE DETAILS -->
+      <section>
         <h2 class="text-lg font-semibold text-gray-900 mb-4">
           Employee Details
         </h2>
@@ -40,49 +37,103 @@
         <%= fields_for :employee_profile do |ep| %>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <%= ep.label :first_name,
-                  class: "block text-sm font-medium text-gray-700" %>
+              <%= ep.label :emp_id, class: "block text-sm font-medium" %>
+              <%= ep.text_field :emp_id,
+                  placeholder: "EMP-001",
+                  class: input_class %>
+            </div>
+
+            <div>
+              <%= ep.label :designation, class: "block text-sm font-medium" %>
+              <%= ep.text_field :designation,
+                  placeholder: "Software Engineer",
+                  class: input_class %>
+            </div>
+
+            <div>
+              <%= ep.label :first_name, class: "block text-sm font-medium" %>
               <%= ep.text_field :first_name,
                   placeholder: "First name",
                   class: input_class %>
             </div>
 
             <div>
-              <%= ep.label :last_name,
-                  class: "block text-sm font-medium text-gray-700" %>
+              <%= ep.label :last_name, class: "block text-sm font-medium" %>
               <%= ep.text_field :last_name,
                   placeholder: "Last name",
                   class: input_class %>
             </div>
 
             <div>
-              <%= ep.label :designation,
-                  class: "block text-sm font-medium text-gray-700" %>
-              <%= ep.text_field :designation,
-                  placeholder: "e.g. Software Engineer",
+              <%= ep.label :joining_date, class: "block text-sm font-medium" %>
+              <%= ep.date_field :joining_date, class: input_class %>
+            </div>
+
+            <div>
+              <%= ep.label :employment_type, class: "block text-sm font-medium" %>
+              <%= ep.select :employment_type,
+                  EmployeeProfile.employment_types.keys.map { |k| [k.titleize, k] },
+                  { prompt: "Select type" },
                   class: input_class %>
             </div>
 
             <div>
-              <%= ep.label :joining_date,
-                  class: "block text-sm font-medium text-gray-700" %>
-              <%= ep.date_field :joining_date,
+              <%= ep.label :status, class: "block text-sm font-medium" %>
+              <%= ep.select :status,
+                  EmployeeProfile.statuses.keys.map { |k| [k.titleize, k] },
+                  {},
                   class: input_class %>
             </div>
           </div>
         <% end %>
-      </div>
+      </section>
 
-      <!-- Compensation Section -->
-      <div>
+      <!-- PERSONAL DETAILS -->
+      <section>
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">
+          Personal Details
+        </h2>
+
+        <%= fields_for :employee_profile do |ep| %>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <%= ep.label :phone, class: "block text-sm font-medium" %>
+              <%= ep.telephone_field :phone,
+                  placeholder: "9876543210",
+                  class: input_class %>
+            </div>
+
+            <div>
+              <%= ep.label :dob, class: "block text-sm font-medium" %>
+              <%= ep.date_field :dob, class: input_class %>
+            </div>
+
+            <div>
+              <%= ep.label :gender, class: "block text-sm font-medium" %>
+              <%= ep.select :gender,
+                  EmployeeProfile.genders.keys.map { |g| [g.titleize, g] },
+                  { prompt: "Select gender" },
+                  class: input_class %>
+            </div>
+
+            <div>
+              <%= ep.label :profile_picture, class: "block text-sm font-medium" %>
+              <%= ep.file_field :profile_picture,
+                  class: "mt-1 block w-full text-sm text-gray-600" %>
+            </div>
+          </div>
+        <% end %>
+      </section>
+
+      <!-- COMPENSATION -->
+      <section>
         <h2 class="text-lg font-semibold text-gray-900 mb-4">
           Compensation
         </h2>
 
         <%= fields_for :employee_profile do |ep| %>
           <div class="max-w-sm">
-            <%= ep.label :salary,
-                class: "block text-sm font-medium text-gray-700" %>
+            <%= ep.label :salary, class: "block text-sm font-medium" %>
 
             <div class="relative mt-1">
               <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
@@ -91,14 +142,7 @@
               <%= ep.number_field :salary,
                   step: 0.01,
                   placeholder: "0.00",
-                  class: "mt-1 block w-full rounded-xl
-                      bg-gray-50 border border-gray-200
-                      pl-5 py-3 pr-4
-                      text-gray-900 placeholder-gray-400
-                      shadow-sm
-                      focus:bg-white focus:border-indigo-500
-                      focus:ring-2 focus:ring-indigo-500/20
-                      transition" %>
+                  class: "#{input_class} pl-8" %>
             </div>
 
             <p class="mt-1 text-xs text-gray-500">
@@ -106,10 +150,35 @@
             </p>
           </div>
         <% end %>
-      </div>
+      </section>
 
-      <!-- Actions -->
-      <div class="flex items-center justify-end gap-4 pt-6">
+      <!-- EMERGENCY CONTACT -->
+      <section>
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">
+          Emergency Contact
+        </h2>
+
+        <%= fields_for :employee_profile do |ep| %>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <%= ep.label :emergency_contact_name, class: "block text-sm font-medium" %>
+              <%= ep.text_field :emergency_contact_name,
+                  placeholder: "Contact person",
+                  class: input_class %>
+            </div>
+
+            <div>
+              <%= ep.label :emergency_contact_phone, class: "block text-sm font-medium" %>
+              <%= ep.telephone_field :emergency_contact_phone,
+                  placeholder: "9876543210",
+                  class: input_class %>
+            </div>
+          </div>
+        <% end %>
+      </section>
+
+      <!-- ACTIONS -->
+      <div class="flex items-center justify-end gap-4 pt-6 border-t">
         <%= link_to "Cancel",
             admin_employees_path,
             class: "px-5 py-2.5 rounded-xl border border-gray-300
@@ -117,8 +186,7 @@
 
         <%= f.submit "Create Employee",
             class: "px-6 py-2.5 rounded-xl bg-indigo-600
-                    text-white font-medium hover:bg-indigo-700
-                    transition" %>
+                    text-white font-medium hover:bg-indigo-700 transition" %>
       </div>
     <% end %>
   </div>

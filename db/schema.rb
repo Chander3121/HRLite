@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_19_084459) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_21_124702) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -68,14 +68,26 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_19_084459) do
   end
 
   create_table "employee_profiles", force: :cascade do |t|
+    t.text "address"
+    t.integer "age"
+    t.string "blood_group"
     t.datetime "created_at", null: false
     t.string "designation"
+    t.date "dob"
+    t.string "emergency_contact_name"
+    t.string "emergency_contact_phone"
+    t.string "emp_id"
+    t.integer "employment_type"
     t.string "first_name"
+    t.integer "gender"
     t.date "joining_date"
     t.string "last_name"
+    t.string "phone"
     t.decimal "salary", precision: 10, scale: 2
+    t.integer "status"
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
+    t.index ["emp_id"], name: "index_employee_profiles_on_emp_id", unique: true
     t.index ["user_id"], name: "index_employee_profiles_on_user_id"
   end
 

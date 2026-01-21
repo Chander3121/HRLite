@@ -1,0 +1,86 @@
+<div class="w-full">
+  <!-- Header -->
+  <div class="mb-8">
+    <h1 class="text-3xl font-semibold text-gray-900">
+      My ID Card
+    </h1>
+    <p class="mt-1 text-sm text-gray-500">
+      Your digital employee identification
+    </p>
+  </div>
+
+  <!-- Card Container -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <!-- LEFT: ID CARD -->
+    <div class="bg-white rounded-2xl shadow-md border border-gray-100 p-6">
+      <div class="flex items-center gap-4 mb-6">
+        <% if @profile.profile_picture.attached? %>
+          <%= image_tag @profile.profile_picture.variant(resize_to_fill: [80, 80]),
+              class: "h-20 w-20 rounded-xl object-cover border" %>
+        <% else %>
+          <div class="h-20 w-20 rounded-xl bg-gray-200 flex items-center justify-center text-gray-500">
+            N/A
+          </div>
+        <% end %>
+
+        <div>
+          <h2 class="text-xl font-semibold text-gray-900">
+            <%= @profile.first_name %> <%= @profile.last_name %>
+          </h2>
+          <p class="text-sm text-gray-500">
+            <%= @profile.designation %>
+          </p>
+        </div>
+      </div>
+
+      <div class="space-y-3 text-sm">
+        <div class="flex justify-between">
+          <span class="text-gray-500">Employee ID</span>
+          <span class="font-medium text-gray-900">
+            <%= @profile.emp_id %>
+          </span>
+        </div>
+
+        <div class="flex justify-between">
+          <span class="text-gray-500">Company</span>
+          <span class="font-medium text-gray-900">
+            HRLite
+          </span>
+        </div>
+
+        <div class="flex justify-between">
+          <span class="text-gray-500">Joining Date</span>
+          <span class="font-medium text-gray-900">
+            <%= @profile.joining_date.strftime("%d %b %Y") %>
+          </span>
+        </div>
+      </div>
+
+      <div class="mt-6 border-t pt-4 text-xs text-gray-400">
+        This is a system-generated digital ID card.
+      </div>
+    </div>
+
+    <!-- RIGHT: QR CODE -->
+    <div class="bg-white rounded-2xl shadow-md border border-gray-100 p-6
+            flex flex-col items-center">
+      <div class="mb-4">
+        <% if defined?(@qr_code_svg) %>
+          <%= raw @qr_code_svg %>
+        <% else %>
+          <div class="h-40 w-40 bg-gray-100 flex items-center justify-center text-gray-400">
+            QR Code
+          </div>
+        <% end %>
+      </div>
+
+      <p class="text-sm text-gray-600 text-center">
+        Scan this QR code to verify employee identity
+      </p>
+
+      <p class="mt-1 text-xs text-gray-400 text-center">
+        For official HR use only
+      </p>
+    </div>
+  </div>
+</div>

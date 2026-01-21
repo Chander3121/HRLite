@@ -77,3 +77,5 @@ gem "prawn"
 gem "sidekiq"
 gem "sidekiq-cron"
 
+gem "rqrcode"
+gem "heroicon"

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>HRLite</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+  </head>
+
+  <body class="bg-gray-50 font-sans">
+    <div class="min-h-screen flex">
+      <!-- SIDEBAR -->
+      <aside class="w-64 bg-white rounded-2xl fixed inset-y-0 flex flex-col">
+        <!-- BRAND -->
+        <div class="px-6 py-5">
+          <h1 class="text-xl font-semibold text-gray-900">
+            HRLite
+          </h1>
+          <p class="text-xs text-gray-500 mt-1">
+            Employee Portal
+          </p>
+        </div>
+
+        <!-- PROFILE -->
+        <div class="px-6 py-4">
+          <% profile = current_user.employee_profile %>
+
+          <div class="flex items-center gap-3">
+            <% if profile.profile_picture.attached? %>
+              <%= image_tag profile.profile_picture.variant(resize_to_fill: [60, 60]),
+                  class: "rounded-full object-cover" %>
+            <% else %>
+              <div class="h-15 w-15 rounded-full bg-indigo-100
+                          flex items-center justify-center
+                          text-indigo-600 font-medium">
+                <%= profile.first_name.first %>
+              </div>
+            <% end %>
+
+            <div class="leading-tight">
+              <p class="text-sm font-medium text-gray-900">
+                <%= profile.first_name %> <%= profile.last_name %>
+              </p>
+              <p class="text-xs text-gray-500">
+                <%= profile.designation %>
+              </p>
+              <p class="text-xs text-indigo-600 font-medium">
+                <%= profile.emp_id %>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- NAV -->
+        <nav class="flex-1 px-3 py-4 space-y-1 text-sm">
+          <%= sidebar_link "Dashboard", dashboard_path, "home" %>
+          <%= sidebar_link "Attendance", attendances_path, "clock" %>
+          <%= sidebar_link "Leaves", leave_requests_path, "calendar-days" %>
+          <%= sidebar_link "Payslips", payslip_requests_path, "banknotes" %>
+          <%= sidebar_link "My Profile", edit_profile_path, "user" %>
+          <%= sidebar_link "ID Card", my_id_card_profile_path, "identification" %>
+          <%= sidebar_link "Birthdays", birthdays_dashboard_path, "cake" %>
+        </nav>
+
+        <!-- LOGOUT -->
+        <div class="px-3 py-4">
+          <%= button_to destroy_user_session_path,
+              method: :delete,
+              class: "w-full flex items-center gap-3 px-3 py-2 rounded-lg
+                      text-sm text-red-600 hover:bg-red-50" do %>
+            <%= heroicon "arrow-right-on-rectangle",
+                variant: :outline,
+                options: { class: "h-5 w-5 text-red-600" } %>
+            Logout
+          <% end %>
+        </div>
+      </aside>
+
+      <!-- CONTENT -->
+      <main class="flex-1 ml-64 p-8">
+        <%= yield %>
+      </main>
+    </div>
+  </body>
+</html>

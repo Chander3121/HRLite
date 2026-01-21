@@ -1,37 +1,108 @@
-<h1 class="text-2xl font-bold mb-6">My Profile</h1>
+<div class="w-full">
+  <!-- Header -->
+  <div class="mb-8">
+    <h1 class="text-3xl font-semibold text-gray-900">
+      My Profile
+    </h1>
+    <p class="mt-1 text-sm text-gray-500">
+      Update your personal information
+    </p>
+  </div>
 
-<div class="bg-white rounded-xl shadow p-6 max-w-xl">
-  <%= form_with model: @profile,
-                url: profile_path,
-                method: :patch,
-                data: { turbo: false },
-                class: "space-y-5" do |f| %>
+  <!-- Card -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+    <%= form_with model: @profile,
+                  url: profile_path,
+                  method: :patch,
+                  data: { turbo: false },
+                  class: "space-y-8" do |f| %>
 
-    <div class="grid grid-cols-2 gap-4">
-      <div>
-        <%= f.label :first_name, class: "block text-sm font-medium text-gray-700" %>
-        <%= f.text_field :first_name,
-            class: "mt-1 w-full rounded-lg border-gray-300" %>
+      <!-- BASIC INFO -->
+      <section>
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">
+          Basic Information
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <%= f.label :first_name, class: "block text-sm font-medium" %>
+            <%= f.text_field :first_name,
+                placeholder: "First name",
+                class: input_class %>
+          </div>
+
+          <div>
+            <%= f.label :last_name, class: "block text-sm font-medium" %>
+            <%= f.text_field :last_name,
+                placeholder: "Last name",
+                class: input_class %>
+          </div>
+        </div>
+      </section>
+
+      <!-- PERSONAL DETAILS -->
+      <section>
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">
+          Personal Details
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <%= f.label :phone, class: "block text-sm font-medium" %>
+            <%= f.telephone_field :phone,
+                placeholder: "9876543210",
+                class: input_class %>
+          </div>
+
+          <div>
+            <%= f.label :dob, class: "block text-sm font-medium" %>
+            <%= f.date_field :dob, class: input_class %>
+          </div>
+
+          <div>
+            <%= f.label :gender, class: "block text-sm font-medium" %>
+            <%= f.select :gender,
+                EmployeeProfile.genders.keys.map { |g| [g.titleize, g] },
+                { prompt: "Select gender" },
+                class: input_class %>
+          </div>
+
+          <div>
+            <%= f.label :profile_picture, class: "block text-sm font-medium" %>
+            <%= f.file_field :profile_picture,
+                class: "mt-1 block w-full text-sm text-gray-600" %>
+          </div>
+        </div>
+      </section>
+
+      <!-- ADDRESS -->
+      <section>
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">
+          Address
+        </h2>
+
+        <%= f.text_area :address,
+            rows: 3,
+            placeholder: "Current residential address",
+            class: input_class %>
+      </section>
+
+      <!-- INFO NOTE -->
+      <div class="rounded-xl bg-gray-50 p-4 text-sm text-gray-600">
+        Salary, designation, employment type, and employee ID can only be updated by HR/Admin.
       </div>
 
-      <div>
-        <%= f.label :last_name, class: "block text-sm font-medium text-gray-700" %>
-        <%= f.text_field :last_name,
-            class: "mt-1 w-full rounded-lg border-gray-300" %>
+      <!-- ACTIONS -->
+      <div class="flex items-center justify-end gap-4 pt-6 border-t">
+        <%= link_to "Cancel",
+            dashboard_path,
+            class: "px-5 py-2.5 rounded-xl border border-gray-300
+                    text-gray-600 hover:bg-gray-50" %>
+
+        <%= f.submit "Save Changes",
+            class: "px-6 py-2.5 rounded-xl bg-indigo-600
+                    text-white font-medium hover:bg-indigo-700 transition" %>
       </div>
-    </div>
-
-    <div class="bg-gray-50 p-4 rounded-lg text-sm text-gray-600">
-      Salary, role, and designation can only be changed by admin.
-    </div>
-
-    <div class="flex justify-end gap-3">
-      <%= link_to "Cancel",
-          dashboard_path,
-          class: "px-4 py-2 border rounded-lg text-gray-600" %>
-
-      <%= f.submit "Save Changes",
-          class: "px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700" %>
-    </div>
-  <% end %>
+    <% end %>
+  </div>
 </div>

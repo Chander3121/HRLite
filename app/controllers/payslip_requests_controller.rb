@@ -11,7 +11,7 @@ class PayslipRequestsController < ApplicationController
   end
 
   def create
-  	month = Date.parse("#{request_params[:month]}-01")
+    month = Date.parse("#{request_params[:month]}-01")
 
     if current_user.payslip_requests.exists?(month: month)
       redirect_to payslip_requests_path,
@@ -20,16 +20,16 @@ class PayslipRequestsController < ApplicationController
     end
 
     @request = current_user.payslip_requests.new(
-	    month: month,
-	    status: :pending
-	  )
+      month: month,
+      status: :pending
+    )
 
-	  if @request.save
-	    redirect_to payslip_requests_path,
-	      notice: "Payslip request submitted."
-	  else
-	    render :new, status: :unprocessable_entity
-	  end
+    if @request.save
+      redirect_to payslip_requests_path,
+        notice: "Payslip request submitted."
+    else
+      render :new, status: :unprocessable_entity
+    end
   end
 
   private

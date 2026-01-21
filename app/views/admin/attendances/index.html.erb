@@ -66,10 +66,10 @@
           <td class="px-6 py-3"><%= attendance.user.email %></td>
           <td class="px-6 py-3"><%= attendance.date %></td>
           <td class="px-6 py-3">
-            <%= attendance.check_in&.strftime("%H:%M") || "-" %>
+            <%= attendance.check_in&.strftime("%I:%M %p") || "—" %>
           </td>
           <td class="px-6 py-3">
-            <%= attendance.check_out&.strftime("%H:%M") || "-" %>
+            <%= attendance.check_out&.strftime("%I:%M %p") || "—" %>
           </td>
           <td class="px-6 py-3">
             <%= attendance.worked_minutes ?

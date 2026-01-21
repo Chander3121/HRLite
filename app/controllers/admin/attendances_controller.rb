@@ -1,7 +1,7 @@
 module Admin
   class AttendancesController < ApplicationController
     before_action :ensure_admin
-    before_action :set_attendance, only: [:edit, :update]
+    before_action :set_attendance, only: [ :edit, :update ]
 
     def index
       @users = User.employee.order(:email)
@@ -39,7 +39,7 @@ module Admin
       attendances = filtered_attendances
 
       csv_data = CSV.generate(headers: true) do |csv|
-        csv << ["Employee Email", "Date", "Check In", "Check Out", "Worked Hours"]
+        csv << [ "Employee Email", "Date", "Check In", "Check Out", "Worked Hours" ]
 
         attendances.each do |a|
           csv << [

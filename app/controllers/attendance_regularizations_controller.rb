@@ -15,12 +15,12 @@ class AttendanceRegularizationsController < ApplicationController
     @request.status = :pending
 
     if @request.save
-  	  AttendanceRegularizationMailer
-  	    .notify_admin(@request)
-  	    .deliver_later
+      AttendanceRegularizationMailer
+        .notify_admin(@request)
+        .deliver_later
 
-  	  redirect_to attendance_regularizations_path,
-  	    notice: "Regularization request submitted."
+      redirect_to attendance_regularizations_path,
+        notice: "Regularization request submitted."
     else
       render :new, status: :unprocessable_entity
     end

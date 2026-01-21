@@ -1,7 +1,7 @@
 module Admin
   class EmployeesController < ApplicationController
     before_action :ensure_admin
-    before_action :set_user, only: [:edit, :update]
+    before_action :set_user, only: [ :edit, :update ]
 
     def index
       @employees = User.employee.includes(:employee_profile)

@@ -1,6 +1,6 @@
 module ApplicationHelper
   include IconHelper
-	def attendance_status_color(status)
+  def attendance_status_color(status)
     case status
     when "present"
       "bg-green-100 text-green-700"

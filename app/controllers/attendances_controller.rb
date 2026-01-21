@@ -36,21 +36,21 @@ class AttendancesController < ApplicationController
   end
 
   def check_out
-	  attendance = current_user.attendances.find_by(date: Date.current)
+    attendance = current_user.attendances.find_by(date: Date.current)
 
-	  if attendance.nil? || attendance.check_in.nil?
-	    redirect_to dashboard_path, alert: "Please check in first."
-	  elsif attendance.check_out.present?
-	    redirect_to dashboard_path, alert: "You already checked out."
-	  else
-	    attendance.update!(
-	      check_out: Time.current,
-	      worked_minutes: ((Time.current - attendance.check_in) / 60).to_i
-	    )
+    if attendance.nil? || attendance.check_in.nil?
+      redirect_to dashboard_path, alert: "Please check in first."
+    elsif attendance.check_out.present?
+      redirect_to dashboard_path, alert: "You already checked out."
+    else
+      attendance.update!(
+        check_out: Time.current,
+        worked_minutes: ((Time.current - attendance.check_in) / 60).to_i
+      )
 
-	    redirect_to dashboard_path, notice: "Checked out successfully."
-	  end
-	end
+      redirect_to dashboard_path, notice: "Checked out successfully."
+    end
+  end
 
   private
 

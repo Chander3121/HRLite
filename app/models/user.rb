@@ -18,9 +18,9 @@ class User < ApplicationRecord
     LeaveBalance.leave_types.each do |type, _|
       default_days =
         case type
-          when "paid" then 12
-          when "sick" then 6
-          when "casual" then 6
+        when "paid" then 12
+        when "sick" then 6
+        when "casual" then 6
         end
 
       leave_balances.create!(

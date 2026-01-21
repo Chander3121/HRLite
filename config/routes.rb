@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  devise_for :users, skip: [:registrations]
+  devise_for :users, skip: [ :registrations ]
   # devise_for :users
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
@@ -15,36 +15,36 @@ Rails.application.routes.draw do
   root "dashboards#show"
 
   # EMPLOYEE ROUTES STARTS HERE
-  resource :dashboard, only: [:show]
+  resource :dashboard, only: [ :show ]
 
-  resources :leave_requests, only: [:index, :new, :create]
+  resources :leave_requests, only: [ :index, :new, :create ]
 
-  resources :attendances, only: [:index] do
+  resources :attendances, only: [ :index ] do
     collection do
       post :check_in
       post :check_out
     end
   end
 
-  resource :profile, only: [:edit, :update]
-  resources :payslip_requests, only: [:index, :new, :create]
-  resources :attendance_regularizations, only: [:index, :new, :create]
+  resource :profile, only: [ :edit, :update ]
+  resources :payslip_requests, only: [ :index, :new, :create ]
+  resources :attendance_regularizations, only: [ :index, :new, :create ]
   # EMPLOYEE ROUTES ENDS HERE
 
 
   # ADMIN ROUTES STARTS HERE
   namespace :admin do
-    resource :dashboard, only: [:show]
+    resource :dashboard, only: [ :show ]
 
-    resources :employees, only: [:index, :new, :create, :edit, :update]
+    resources :employees, only: [ :index, :new, :create, :edit, :update ]
 
-    resources :attendances, only: [:index, :edit, :update] do
+    resources :attendances, only: [ :index, :edit, :update ] do
       collection do
         get :export
       end
     end
 
-    resources :leave_requests, only: [:index] do
+    resources :leave_requests, only: [ :index ] do
       member do
         patch :approve
         patch :reject
@@ -53,11 +53,11 @@ Rails.application.routes.draw do
 
     resources :holidays
 
-    resources :attendance_summaries, only: [:index]
+    resources :attendance_summaries, only: [ :index ]
 
-    resources :payrolls, only: [:index, :create]
-    resources :payslip_requests, only: [:index, :update]
-    resources :attendance_regularizations, only: [:index, :update]
+    resources :payrolls, only: [ :index, :create ]
+    resources :payslip_requests, only: [ :index, :update ]
+    resources :attendance_regularizations, only: [ :index, :update ]
   end
   # ADMIN ROUTES ENDS HERE
 end

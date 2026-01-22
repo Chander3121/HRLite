@@ -10,7 +10,7 @@
       <label class="block text-sm font-medium text-gray-700">Month</label>
       <%= month_field_tag :month,
           @month.strftime("%Y-%m"),
-          class: "mt-1 rounded-lg border-gray-300" %>
+          class: input_class %>
     </div>
 
     <%= submit_tag "Generate Payroll",

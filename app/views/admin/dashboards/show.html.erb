@@ -10,26 +10,26 @@
 <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
   <div class="bg-white rounded-xl shadow p-6">
     <p class="text-sm text-gray-500">Total Employees</p>
-    <p class="text-2xl font-semibold"><%= @employees_count %></p>
+    <p class="text-2xl font-semibold text-green-600"><%= @employees_count %></p>
   </div>
 
   <div class="bg-white rounded-xl shadow p-6">
     <p class="text-sm text-gray-500">Today’s Attendance</p>
-    <p class="text-2xl font-semibold"><%= @today_attendance %></p>
+    <p class="text-2xl font-semibold text-green-600"><%= @today_attendance %></p>
   </div>
 
   <div class="bg-white rounded-xl shadow p-6">
     <p class="text-sm text-gray-500">Leaves Requests</p>
-    <p class="text-2xl font-semibold"><%= @pending_leaves %></p>
+    <p class="text-2xl font-semibold text-red-600"><%= @pending_leaves %></p>
   </div>
 
   <div class="bg-white rounded-xl shadow p-6">
     <p class="text-sm text-gray-500">Payslip Requests</p>
-    <p class="text-2xl font-semibold"><%= @payslip_requests_count %></p>
+    <p class="text-2xl font-semibold text-red-600"><%= @payslip_requests_count %></p>
   </div>
 
   <div class="bg-white rounded-xl shadow p-6">
     <p class="text-sm text-gray-500">Attendance Regularization Requests</p>
-    <p class="text-2xl font-semibold"><%= @attendance_regularize_requests %></p>
+    <p class="text-2xl font-semibold text-red-600"><%= @attendance_regularize_requests %></p>
   </div>
 </div>

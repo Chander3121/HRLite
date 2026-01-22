@@ -1,4 +1,4 @@
-<div class="max-w-4xl mx-auto">
+<div class="w-full">
   <!-- Header -->
   <div class="mb-8">
     <h1 class="text-3xl font-semibold text-gray-900">
@@ -84,6 +84,12 @@
                   {},
                   class: input_class %>
             </div>
+            <div>
+              <%= ep.label :blood_group, class: "block text-sm font-medium" %>
+              <%= ep.text_field :blood_group,
+                  placeholder: "B+",
+                  class: input_class %>
+            </div>
           </div>
         <% end %>
       </section>
@@ -115,11 +121,20 @@
                   { prompt: "Select gender" },
                   class: input_class %>
             </div>
-
             <div>
               <%= ep.label :profile_picture, class: "block text-sm font-medium" %>
               <%= ep.file_field :profile_picture,
-                  class: "mt-1 block w-full text-sm text-gray-600" %>
+                  accept: "image/png,image/jpeg,image/svg+xml,image/webp,image/gif",
+                  class: "w-full text-slate-500 font-medium text-sm bg-white border
+                          file:cursor-pointer cursor-pointer
+                          file:border-0 file:py-3 file:px-4 file:mr-4
+                          file:bg-gray-100 file:text-slate-500
+                          hover:file:bg-gray-200
+                          rounded" %>
+
+                <p class="mt-2 text-xs text-gray-500">
+                  PNG, JPG, SVG, WEBP, or GIF. Max size 2MB.
+                </p>
             </div>
           </div>
         <% end %>
@@ -132,7 +147,7 @@
         </h2>
 
         <%= fields_for :employee_profile do |ep| %>
-          <div class="max-w-sm">
+          <div class="w-full">
             <%= ep.label :salary, class: "block text-sm font-medium" %>
 
             <div class="relative mt-1">

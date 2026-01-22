@@ -65,7 +65,7 @@ class AttendancesController < ApplicationController
   def build_summary
     attendances = @records.values
     @summary = {
-      present: attendances.count { |a| a.status == "present" },
+      present: attendances.count { |a| ["full_day", "half_day", "short_working"].include? a.status },
       short_working: attendances.count { |a| a.short_working? },
       half_day: attendances.count { |a| a.half_day? },
       absent: attendances.count { |a| a.absent? },

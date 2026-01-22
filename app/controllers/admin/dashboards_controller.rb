@@ -5,6 +5,7 @@ module Admin
       @today_attendance = Attendance.where(date: Date.current).count
       @pending_leaves = LeaveRequest.pending.count
       @payslip_requests_count = PayslipRequest.pending.count
+      @attendance_regularize_requests = AttendanceRegularization.pending.count
     end
   end
 end

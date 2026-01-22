@@ -30,7 +30,7 @@
     <div class="min-h-screen flex">
       <!-- SIDEBAR -->
       <%if user_signed_in?%>
-        <aside class="w-64 bg-white rounded-xl fixed inset-y-0 flex flex-col
+        <aside class="w-84 bg-white rounded-xl fixed inset-y-0 flex flex-col
                         shadow-lg">
           <div class="h-full flex flex-col">
 
@@ -97,7 +97,8 @@
       <% end %>
 
       <!-- CONTENT -->
-      <main class="flex-1 <%= user_signed_in? ? 'ml-64 p-8' : 'p-8' %>">
+      <main class="flex-1 <%= user_signed_in? ? 'ml-84 p-8' : 'p-8' %>">
+        <%= render "shared/flash" %>
         <%= yield %>
       </main>
     </div>

@@ -8,20 +8,20 @@
     <div>
       <%= f.label :date, class: "block text-sm font-medium" %>
       <%= f.date_field :date,
-          class: "mt-1 w-full rounded-lg border-gray-300" %>
+          class: input_class %>
     </div>
 
     <div class="grid grid-cols-2 gap-4">
       <div>
         <%= f.label :check_in %>
         <%= f.datetime_local_field :check_in,
-            class: "mt-1 w-full rounded-lg border-gray-300" %>
+            class: input_class %>
       </div>
 
       <div>
         <%= f.label :check_out %>
         <%= f.datetime_local_field :check_out,
-            class: "mt-1 w-full rounded-lg border-gray-300" %>
+            class: input_class %>
       </div>
     </div>
 
@@ -29,7 +29,7 @@
       <%= f.label :reason %>
       <%= f.text_area :reason,
           rows: 3,
-          class: "mt-1 w-full rounded-lg border-gray-300" %>
+          class: input_class %>
     </div>
 
     <p class="text-xs text-gray-500">

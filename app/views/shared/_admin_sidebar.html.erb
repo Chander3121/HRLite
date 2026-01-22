@@ -1,7 +1,24 @@
 <%= sidebar_link "Dashboard", admin_dashboard_path, "home" %>
+
 <%= sidebar_link "Employees", admin_employees_path, "users" %>
+
 <%= sidebar_link "Attendance", admin_attendances_path, "calendar-days" %>
-<%= sidebar_link "Leave Requests", admin_leave_requests_path, "paper-airplane" %>
-<%= sidebar_link "Payslip Requests", admin_payslip_requests_path, "document-text" %>
+
+<%= sidebar_link "Leave Requests",
+    admin_leave_requests_path,
+    "paper-airplane",
+    count: LeaveRequest.pending.count %>
+
+<%= sidebar_link "Attendance Regularize Requests",
+    admin_attendance_regularizations_path,
+    "bookmark-slash",
+    count: AttendanceRegularization.pending.count %>
+
+<%= sidebar_link "Payslip Requests",
+    admin_payslip_requests_path,
+    "document-text",
+    count: PayslipRequest.pending.count %>
+
 <%= sidebar_link "Payroll", admin_payrolls_path, "banknotes" %>
+
 <%= sidebar_link "Holidays", admin_holidays_path, "calendar" %>

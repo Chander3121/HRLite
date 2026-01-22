@@ -19,17 +19,25 @@ class AttendancesController < ApplicationController
   end
 
   def check_in
-    if Date.current.saturday? || Date.current.sunday?
+    today = Date.current
+
+    if today.saturday? || today.sunday?
       redirect_to dashboard_path, alert: "Today is a weekly off."
       return
     end
 
-    attendance = current_user.attendances.find_or_initialize_by(date: Date.current)
+    if Holiday.exists?(date: today)
+      redirect_to dashboard_path, alert: "Today is a holiday."
+      return
+    end
+
+    attendance = current_user.attendances.find_or_initialize_by(date: today)
 
     if attendance.check_in.present?
       redirect_to dashboard_path, alert: "Already checked in."
     else
       attendance.check_in = Time.current
+      attendance.status = "present"
       attendance.save!
       redirect_to dashboard_path, notice: "Checked in successfully."
     end

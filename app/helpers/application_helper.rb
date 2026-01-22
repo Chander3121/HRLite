@@ -37,19 +37,35 @@ module ApplicationHelper
     "#{greeting_message}, #{name}"
   end
 
-  def sidebar_link(label, path, icon)
+  def sidebar_link(label, path, icon, count: nil)
     active = current_page?(path)
 
     link_to path,
-      class: "flex items-center gap-3 px-3 py-2 rounded-lg
+      class: "flex items-center justify-between px-3 py-2 rounded-lg
               #{active ? 'bg-indigo-50 text-indigo-700 font-medium'
                         : 'text-gray-700 hover:bg-gray-100'}" do
-      concat heroicon(
-        icon,
-        variant: :outline,
-        options: { class: "h-5 w-5 text-gray-500" }
-      )
-      concat content_tag(:span, label)
+
+      # Left side (icon + label)
+      left = content_tag(:div, class: "flex items-center gap-3") do
+        concat heroicon(
+          icon,
+          variant: :outline,
+          options: { class: "h-5 w-5 text-gray-500" }
+        )
+        concat content_tag(:span, label)
+      end
+
+      concat left
+
+      # Right side (badge)
+      if count.present? && count.to_i > 0
+        concat content_tag(
+          :span,
+          count,
+          class: "ml-2 min-w-[1.5rem] px-2 py-0.5 text-xs font-semibold
+                  text-white bg-red-600 rounded-full text-center"
+        )
+      end
     end
   end
 end

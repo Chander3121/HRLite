@@ -8,7 +8,19 @@ class AttendanceRegularization < ApplicationRecord
   }
 
   validates :date, :reason, presence: true
-    validate :date_within_allowed_window
+  validate :date_within_allowed_window
+
+  after_create_commit do
+    broadcast_prepend_to "admin_toasts",
+      target: "toast-container",
+      partial: "shared/toast",
+      locals: {
+        title: "Attendance Regularization",
+        message: "#{user.employee_profile.first_name} submitted a regularization request",
+        icon: "bookmark-slash",
+        url: Rails.application.routes.url_helpers.admin_attendance_regularizations_path
+      }
+  end
 
   private
 

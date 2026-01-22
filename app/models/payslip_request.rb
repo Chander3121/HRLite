@@ -13,4 +13,16 @@ class PayslipRequest < ApplicationRecord
       scope: :month,
       message: "payslip already requested for this month"
     }
+
+  after_create_commit do
+    broadcast_prepend_to "admin_toasts",
+      target: "toast-container",
+      partial: "shared/toast",
+      locals: {
+        title: "Payslip Requested",
+        message: "#{user.employee_profile.first_name} requested a payslip",
+        icon: "document-text",
+        url: Rails.application.routes.url_helpers.admin_payslip_requests_path
+      }
+  end
 end

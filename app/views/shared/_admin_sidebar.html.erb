@@ -7,7 +7,9 @@
 <%= sidebar_link "Leave Requests",
     admin_leave_requests_path,
     "paper-airplane",
-    count: LeaveRequest.pending.count %>
+    count: @leave_count,
+    pulsing: @leave_pulsing,
+    badge_id: "leave_badge" %>
 
 <%= sidebar_link "Attendance Regularize Requests",
     admin_attendance_regularizations_path,

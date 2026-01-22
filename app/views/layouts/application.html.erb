@@ -95,6 +95,16 @@
           </div>
         </aside>
       <% end %>
+      <% if current_user&.admin? %>
+        <%= turbo_stream_from "admin_toasts" %>
+
+        <div id="toast-container"
+             class="fixed top-5 right-5 z-50 space-y-3 w-80">
+        </div>
+        <audio id="notification-sound" preload="auto">
+          <source src="<%= asset_path('notification.mp3') %>" type="audio/mpeg">
+        </audio>
+      <% end %>
 
       <!-- CONTENT -->
       <main class="flex-1 <%= user_signed_in? ? 'ml-84 p-8' : 'p-8' %>">

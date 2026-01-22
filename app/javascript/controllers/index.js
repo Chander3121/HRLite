@@ -5,5 +5,7 @@
 import { application } from "./application"
 
 import DropdownController from "./dropdown_controller"
+import ToastController from "./toast_controller"
+application.register("toast", ToastController)
 
 application.register("dropdown", DropdownController)

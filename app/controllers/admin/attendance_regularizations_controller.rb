@@ -46,5 +46,12 @@ module Admin
         worked_minutes: worked_minutes
       )
     end
+
+    def mark_seen
+      AdminPreference.find_or_create_by!(
+        user: current_user,
+        key: "leave_requests"
+      ).update!(last_seen_at: Time.current)
+    end
   end
 end

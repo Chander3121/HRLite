@@ -37,7 +37,7 @@ module ApplicationHelper
     "#{greeting_message}, #{name}"
   end
 
-  def sidebar_link(label, path, icon, count: nil)
+  def sidebar_link(label, path, icon, count: nil, pulsing: false, badge_id: nil)
     active = current_page?(path)
 
     link_to path,
@@ -45,27 +45,31 @@ module ApplicationHelper
               #{active ? 'bg-indigo-50 text-indigo-700 font-medium'
                         : 'text-gray-700 hover:bg-gray-100'}" do
 
-      # Left side (icon + label)
-      left = content_tag(:div, class: "flex items-center gap-3") do
-        concat heroicon(
-          icon,
-          variant: :outline,
-          options: { class: "h-5 w-5 text-gray-500" }
-        )
-        concat content_tag(:span, label)
-      end
+      concat(
+        content_tag(:div, class: "flex items-center gap-3") do
+          concat heroicon(icon, variant: :outline, options: { class: "h-5 w-5 text-gray-500" })
+          concat content_tag(:span, label)
+        end
+      )
 
-      concat left
-
-      # Right side (badge)
-      if count.present? && count.to_i > 0
+      if badge_id
         concat content_tag(
-          :span,
-          count,
-          class: "ml-2 min-w-[1.5rem] px-2 py-0.5 text-xs font-semibold
-                  text-white bg-red-600 rounded-full text-center"
+          :div,
+          sidebar_badge(count: count, pulsing: pulsing),
+          id: badge_id
         )
       end
     end
+  end
+
+  def sidebar_badge(count:, pulsing: false)
+    return if count.to_i.zero?
+
+    classes = "ml-2 min-w-[1.5rem] px-2 py-0.5 text-xs font-semibold
+               text-white bg-red-600 rounded-full text-center"
+
+    classes += " animate-pulse" if pulsing
+
+    content_tag(:span, count, class: classes)
   end
 end

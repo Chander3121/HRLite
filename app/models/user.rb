@@ -10,6 +10,7 @@ class User < ApplicationRecord
   has_many :leave_balances, dependent: :destroy
   has_many :payslip_requests, dependent: :destroy
   has_many :attendance_regularizations, dependent: :destroy
+  has_many :admin_preferences, dependent: :destroy
 
   after_create :setup_leave_balances, if: :employee?
 

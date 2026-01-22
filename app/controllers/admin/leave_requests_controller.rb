@@ -1,5 +1,6 @@
 class Admin::LeaveRequestsController < ApplicationController
   before_action :ensure_admin
+  after_action :mark_seen, only: :index
 
   def index
     @leaves = LeaveRequest.pending.includes(:user)
@@ -40,6 +41,13 @@ class Admin::LeaveRequestsController < ApplicationController
   end
 
   private
+
+  def mark_seen
+    AdminPreference.find_or_create_by!(
+      user: current_user,
+      key: "leave_requests"
+    ).update!(last_seen_at: Time.current)
+  end
 
   def leave
     @leave ||= LeaveRequest.find(params[:id])

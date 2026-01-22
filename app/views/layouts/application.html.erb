@@ -27,10 +27,79 @@
   </head>
 
   <body class="bg-gray-100 min-h-screen">
-    <%= render "shared/navbar" %>
-    <main class="max-w-7xl mx-auto px-4 py-6">
-      <%= render "shared/flash" %>
-      <%= yield %>
-    </main>
+    <div class="min-h-screen flex">
+      <!-- SIDEBAR -->
+      <%if user_signed_in?%>
+        <aside class="w-64 bg-white rounded-xl fixed inset-y-0 flex flex-col
+                        shadow-lg">
+          <div class="h-full flex flex-col">
+
+            <!-- PROFILE / BRAND -->
+            <div class="p-6">
+              <% if current_user.admin? %>
+                <p class="text-xs uppercase tracking-wide text-gray-500 mb-1">
+                  Admin Panel
+                </p>
+                <p class="text-lg font-semibold text-indigo-600">
+                  HRLite
+                </p>
+              <% else %>
+                <% profile = current_user.employee_profile %>
+                <div class="flex items-center gap-3">
+                  <% if profile.profile_picture.attached? %>
+                    <%= image_tag profile.profile_picture,
+                        class: "h-12 w-12 rounded-full object-cover" %>
+                  <% else %>
+                    <div class="h-12 w-12 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
+                      <%= profile.first_name.first %>
+                    </div>
+                  <% end %>
+
+                  <div>
+                    <p class="text-sm font-semibold text-gray-900">
+                      <%= profile.first_name %> <%= profile.last_name %>
+                    </p>
+                    <p class="text-xs text-gray-500">
+                      <%= profile.designation %>
+                    </p>
+                    <p class="text-xs text-indigo-600 font-medium">
+                      <%= profile.emp_id %>
+                    </p>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+
+            <!-- NAVIGATION -->
+            <nav class="flex-1 p-4 space-y-1 text-sm">
+              <% if current_user.admin? %>
+                <%= render "shared/admin_sidebar" %>
+              <% else %>
+                <%= render "shared/employee_sidebar" %>
+              <% end %>
+            </nav>
+
+            <!-- LOGOUT -->
+            <div class="p-4">
+              <%= button_to destroy_user_session_path,
+                  method: :delete,
+                  data: { turbo: false },
+                  class: "w-full flex items-center gap-3 px-3 py-2 rounded-lg
+                          text-sm text-red-600 hover:bg-red-50" do %>
+                  <%= heroicon "arrow-right-on-rectangle",
+                    variant: :outline,
+                    options: { class: "h-5 w-5 text-red-600" } %>
+                Logout
+              <% end %>
+            </div>
+          </div>
+        </aside>
+      <% end %>
+
+      <!-- CONTENT -->
+      <main class="flex-1 <%= user_signed_in? ? 'ml-64 p-8' : 'p-8' %>">
+        <%= yield %>
+      </main>
+    </div>
   </body>
 </html>

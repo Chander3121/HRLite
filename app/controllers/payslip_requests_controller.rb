@@ -2,8 +2,6 @@ class PayslipRequestsController < ApplicationController
   before_action :authenticate_user!
   before_action :ensure_employee
 
-  layout "dashboard"
-
   def index
     @requests = current_user.payslip_requests.order(month: :desc)
   end

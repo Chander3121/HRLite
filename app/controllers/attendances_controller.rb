@@ -2,8 +2,6 @@ class AttendancesController < ApplicationController
   before_action :authenticate_user!
   before_action :ensure_employee
 
-  layout "dashboard"
-
   def index
     @month =
       params[:month] ?

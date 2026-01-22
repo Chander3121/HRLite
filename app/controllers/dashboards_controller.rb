@@ -1,5 +1,4 @@
 class DashboardsController < ApplicationController
-  layout "dashboard"
 
   def show
     if current_user.admin?

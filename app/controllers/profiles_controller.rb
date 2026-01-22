@@ -2,8 +2,6 @@ class ProfilesController < ApplicationController
   before_action :authenticate_user!
   before_action :ensure_employee
 
-  layout "dashboard"
-
   def edit
     @profile = current_user.employee_profile
   end

@@ -1,0 +1,84 @@
+<div class="mb-8">
+  <h1 class="text-3xl font-semibold text-gray-900">Holiday Calendar</h1>
+  <p class="mt-1 text-sm text-gray-500">
+    <%= Date.current.year %> company holidays
+  </p>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+  <% (1..12).each do |month| %>
+    <% first_day = Date.new(Date.current.year, month, 1) %>
+    <% last_day  = first_day.end_of_month %>
+
+    <div class="bg-white rounded-xl shadow p-4">
+      <h2 class="text-center font-semibold text-gray-800 mb-3">
+        <%= first_day.strftime("%B") %>
+      </h2>
+
+      <!-- Week headers -->
+      <div class="grid grid-cols-7 text-xs text-gray-400 text-center mb-2">
+        <% %w[Sun Mon Tue Wed Thu Fri Sat].each do |d| %>
+          <div><%= d %></div>
+        <% end %>
+      </div>
+
+      <!-- Calendar grid -->
+      <div class="grid grid-cols-7 gap-y-2 text-center text-sm">
+        <% first_day.wday.times do %>
+          <div></div>
+        <% end %>
+
+        <% (first_day..last_day).each do |date| %>
+          <% holiday = @holidays[date] %>
+          <% weekend = date.saturday? || date.sunday? %>
+
+          <div class="relative group flex flex-col items-center">
+            <!-- DAY NUMBER -->
+            <span class="text-xs text-gray-500">
+              <%= date.day %>
+            </span>
+
+            <!-- STATUS DOT -->
+            <% if holiday %>
+              <span
+                class="mt-1 h-3 w-3 rounded-full bg-red-500 cursor-pointer">
+              </span>
+
+              <!-- TOOLTIP -->
+              <div
+                class="absolute z-10 hidden group-hover:block
+                       bottom-full mb-2 px-3 py-1
+                       text-xs text-white bg-gray-900 rounded-lg
+                       whitespace-nowrap">
+                <%= holiday.name %>
+              </div>
+
+            <% elsif weekend %>
+              <span class="mt-1 h-3 w-3 rounded-full bg-orange-400"></span>
+            <% else %>
+              <span class="mt-1 h-3 w-3 rounded-full border border-gray-300"></span>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<div class="mt-10 flex flex-wrap gap-6 text-sm">
+  <div class="flex items-center gap-2">
+    <span class="h-3 w-3 rounded-full bg-red-500"></span>
+    Holiday
+  </div>
+
+  <div class="flex items-center gap-2">
+    <span class="h-3 w-3 rounded-full bg-orange-400"></span>
+    Weekend
+  </div>
+
+  <div class="flex items-center gap-2">
+    <span class="h-3 w-3 rounded-full border border-gray-300"></span>
+    Working Day
+  </div>
+</div>
+

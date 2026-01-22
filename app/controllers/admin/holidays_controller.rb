@@ -3,10 +3,7 @@ module Admin
     before_action :ensure_admin
 
     def index
-      @holidays = Holiday.order(:date)
-    end
-
-    def new
+      @holidays = Holiday.current_year
       @holiday = Holiday.new
     end
 
@@ -15,8 +12,15 @@ module Admin
       if @holiday.save
         redirect_to admin_holidays_path, notice: "Holiday added."
       else
-        render :new, status: :unprocessable_entity
+        @holidays = Holiday.current_year
+        render :index, status: :unprocessable_entity
       end
+    end
+
+    def destroy
+      holiday = Holiday.find(params[:id])
+      holiday.destroy
+      redirect_to admin_holidays_path, notice: "Holiday removed."
     end
 
     private

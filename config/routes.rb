@@ -14,9 +14,12 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   root "dashboards#show"
 
-  # EMPLOYEE ROUTES STARTS HERE
+  # SHARED ROUTES STARTS HERE
   get "/verify/:emp_id", to: "employees#verify", as: :verify_employee
+  get "/holidays", to: "holidays#index", as: :holidays
+  # SHARED ROUTES ENDS HERE
 
+  # EMPLOYEE ROUTES STARTS HERE
   resource :dashboard, only: [ :show ] do
     get :birthdays
   end
@@ -59,7 +62,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :holidays
+    resources :holidays, only: [:index, :create, :destroy]
 
     resources :attendance_summaries, only: [ :index ]
 

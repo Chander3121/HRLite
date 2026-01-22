@@ -1,0 +1,52 @@
+<div class="mb-8">
+  <h1 class="text-3xl font-semibold text-gray-900">Holidays</h1>
+  <p class="mt-1 text-sm text-gray-500">Manage company holidays</p>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+  <!-- ADD HOLIDAY -->
+  <div class="bg-white rounded-xl shadow p-6">
+    <h2 class="text-lg font-semibold mb-4">Add Holiday</h2>
+
+    <%= form_with model: @holiday, url: admin_holidays_path, data: { turbo: false } do |f| %>
+      <div class="space-y-4">
+        <%= f.text_field :name, placeholder: "Holiday name", class: input_class, required: true %>
+        <%= f.date_field :date, class: input_class, required: true %>
+
+        <%= f.submit "Add Holiday",
+            class: "w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700" %>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- HOLIDAY LIST -->
+  <div class="lg:col-span-2 bg-white rounded-xl shadow p-6">
+    <h2 class="text-lg font-semibold mb-4">Holiday Calendar</h2>
+
+    <table class="w-full text-sm">
+      <thead class="text-gray-500">
+        <tr>
+          <th class="text-left py-2">Date</th>
+          <th class="text-left">Holiday</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @holidays.each do |holiday| %>
+          <tr class="border-t">
+            <td class="py-3"><%= holiday.date.strftime("%d %b %Y") %></td>
+            <td>
+              <p class="font-medium"><%= holiday.name %></p>
+            </td>
+            <td class="text-right">
+              <%= button_to "Delete",
+                  admin_holiday_path(holiday),
+                  method: :delete,
+                  data: { turbo: false, confirm: "Delete this holiday?" },
+                  class: "text-red-600 text-xs hover:underline" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

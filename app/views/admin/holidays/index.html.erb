@@ -5,7 +5,7 @@
 
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
   <!-- ADD HOLIDAY -->
-  <div class="bg-white rounded-xl shadow p-6">
+  <div class="bg-white rounded-xl shadow p-6 h-fit">
     <h2 class="text-lg font-semibold mb-4">Add Holiday</h2>
 
     <%= form_with model: @holiday, url: admin_holidays_path, data: { turbo: false } do |f| %>

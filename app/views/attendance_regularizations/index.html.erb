@@ -25,9 +25,17 @@
         </td>
         <td class="px-6 py-3 text-center">
           <% if r.pending? %>
-            <%= link_to "Edit",
-                edit_attendance_regularization_path(r),
-                class: "text-indigo-600 text-sm hover:underline" %>
+            <div class="flex justify-end gap-3">
+              <%= link_to "Edit",
+                  edit_attendance_regularization_path(r),
+                  class: "text-indigo-600 text-sm hover:underline" %>
+
+              <%= button_to "Cancel",
+                  cancel_attendance_regularization_path(r),
+                  method: :patch,
+                  data: { turbo: false, confirm: "Cancel this regularization request?" },
+                  class: "text-red-600 text-sm hover:underline" %>
+            </div>
           <% else %>
             <span class="text-xs text-gray-400">Locked</span>
           <% end %>

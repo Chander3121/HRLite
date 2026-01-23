@@ -36,11 +36,30 @@ class LeaveRequestsController < ApplicationController
   def edit;end
 
   def update
-    if @leave_request.update(leave_request_params)
+    if @leave_request.update(leave_params)
+      notify_admins!(
+        title: "Leave Request Updated",
+        message: "#{current_user.employee_profile.first_name} edited a leave request (#{@leave_request.leave_type.titleize})",
+        url: admin_leave_requests_path,
+        kind: :leave_request
+      )
       redirect_to leave_requests_path, notice: "Leave request updated successfully."
     else
       render :edit, status: :unprocessable_entity
     end
+  end
+
+  def cancel
+    leave = current_user.leave_requests.find(params[:id])
+
+    unless leave.pending?
+      redirect_to leave_requests_path, alert: "Only pending leave requests can be cancelled."
+      return
+    end
+
+    leave.update!(status: :cancelled)
+
+    redirect_to leave_requests_path, notice: "Leave request cancelled."
   end
 
   private

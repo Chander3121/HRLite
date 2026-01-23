@@ -34,11 +34,33 @@ class AttendanceRegularizationsController < ApplicationController
 
   def update
     if @regularization.update(request_params)
+      notify_admins!(
+        title: "Regularization Updated",
+        message: "#{current_user.employee_profile.first_name} edited attendance regularization for #{@regularization.date.strftime('%d %b')}",
+        url: admin_attendance_regularizations_path,
+        kind: :regularization_request
+      )
+
       redirect_to attendance_regularizations_path,
                   notice: "Attendance regularization updated successfully."
     else
       render :edit, status: :unprocessable_entity
     end
+  end
+
+  def cancel
+    req = current_user.attendance_regularizations.find(params[:id])
+
+    unless req.pending?
+      redirect_to attendance_regularizations_path,
+                  alert: "Only pending regularization requests can be cancelled."
+      return
+    end
+
+    req.update!(status: :cancelled)
+
+    redirect_to attendance_regularizations_path,
+                notice: "Regularization request cancelled."
   end
 
   private

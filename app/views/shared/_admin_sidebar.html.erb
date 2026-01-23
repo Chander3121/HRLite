@@ -28,5 +28,9 @@
 <%= sidebar_link "Payroll", admin_payrolls_path, "banknotes" %>
 
 <%= sidebar_link "Holidays", admin_holidays_path, "calendar" %>
-<%= sidebar_link "Notifications", notifications_path, "bell" %>
 
+<%= sidebar_link "Notifications",
+    notifications_path,
+    "bell",
+    count: @unread_notifications_count,
+    badge_id: "notifications_badge" %>

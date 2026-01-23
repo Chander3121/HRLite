@@ -3,6 +3,9 @@ class NotificationsController < ApplicationController
 
   def index
     @notifications = current_user.notifications.recent.limit(50)
+
+    # auto-mark as read when user visits page
+    # current_user.notifications.unread.update_all(read_at: Time.current)
   end
 
   def read

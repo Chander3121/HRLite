@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
   layout :set_layout
 
   before_action :load_admin_sidebar_state, if: -> { current_user&.admin? }
+  before_action :load_notification_count, if: -> { user_signed_in? }
 
   def after_sign_in_path_for(resource)
     resource.admin? ? admin_dashboard_path : dashboard_path
@@ -32,6 +33,10 @@ class ApplicationController < ActionController::Base
     @payslip_pulsing = new_activity?("payslip_requests", @payslip_latest)
   end
 
+  def load_notification_count
+    @unread_notifications_count = current_user.notifications.unread.count
+  end
+
   def notify_user!(user:, title:, message:, url: nil, kind: :general, icon: "bell")
     notification = Notification.create!(
       user: user,
@@ -52,6 +57,12 @@ class ApplicationController < ActionController::Base
         url: url,
         notification_id: notification.id
       }
+    )
+    Turbo::StreamsChannel.broadcast_replace_to(
+      "user_toasts_#{user.id}",
+      target: "notifications_badge",
+      partial: "shared/sidebar_badge",
+      locals: { count: user.notifications.unread.count, pulsing: false }
     )
   end
 

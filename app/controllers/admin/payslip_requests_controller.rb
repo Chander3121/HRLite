@@ -21,9 +21,17 @@ module Admin
         content_type: "application/pdf"
       )
 
-      request.update!(status: :generated)
+      if request.update(status: :generated)
+        notify_user!(
+          user: request.user,
+          title: "Payslip Generated",
+          message: "Your payslip for #{request.month.strftime('%B %Y')} is now available.",
+          url: payslip_requests_path,
+          kind: :payslip_request,
+          icon: "document-text"
+        )
+      end
 
-      # ✅ SEND EMAIL
       PayslipMailer
         .payslip_generated(request)
         .deliver_later

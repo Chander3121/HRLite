@@ -17,6 +17,15 @@ module Admin
       else
         request.update!(status: :rejected)
       end
+
+      notify_user!(
+        user: request.user,
+        title: "Regularization #{ request.status.titleize }",
+        message: "Your attendance regularization for #{request.date.strftime('%d %b %Y')} was #{ request.status.titleize.downcase }.",
+        url: attendance_regularizations_path,
+        kind: :regularization_request,
+        icon: "bookmark-slash"
+      )
       AttendanceRegularizationMailer
         .notify_employee(request)
         .deliver_later

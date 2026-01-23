@@ -9,7 +9,10 @@ class NotificationsController < ApplicationController
     notification = current_user.notifications.find(params[:id])
     notification.update!(read_at: Time.current)
 
-    redirect_to notification.url.presence || notifications_path
+    respond_to do |format|
+      format.html { redirect_to notification.url.presence || notifications_path }
+      format.json { render json: { ok: true } }
+    end
   end
 
   def mark_all_read

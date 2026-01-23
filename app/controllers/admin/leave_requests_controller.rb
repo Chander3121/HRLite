@@ -23,7 +23,17 @@ class Admin::LeaveRequestsController < ApplicationController
       end
 
       balance.update!(used: balance.used + days)
-      leave.update!(status: :approved)
+      if leave.update(status: :approved)
+        # notify employee
+        notify_user!(
+          user: leave.user,
+          title: "Leave Request #{ leave.status.titleize }",
+          message: "Your #{ leave.leave_type.titleize } leave (#{leave.start_date&.strftime("%d %b %Y")} to #{leave.end_date&.strftime("%d %b %Y")}) was #{ leave.status.titleize.downcase }.",
+          url: leave_requests_path,
+          kind: :leave_request,
+          icon: "paper-airplane"
+        )
+      end
     end
 
     LeaveMailer.status_update(leave).deliver_later

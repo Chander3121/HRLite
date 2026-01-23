@@ -95,15 +95,22 @@
           </div>
         </aside>
       <% end %>
-      <% if current_user&.admin? %>
-        <%= turbo_stream_from "admin_toasts" %>
+
+      <% if user_signed_in? %>
+        <%= turbo_stream_from "user_toasts_#{current_user.id}" %>
 
         <div id="toast-container"
              class="fixed top-5 right-5 z-50 space-y-3 w-80">
         </div>
+
         <audio id="notification-sound" preload="auto">
           <source src="<%= asset_path('notification.mp3') %>" type="audio/mpeg">
         </audio>
+
+        <%# optional: admin also listens to admin stream %>
+        <% if current_user.admin? %>
+          <%= turbo_stream_from "admin_toasts" %>
+        <% end %>
       <% end %>
 
       <!-- CONTENT -->

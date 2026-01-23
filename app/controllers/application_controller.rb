@@ -32,6 +32,29 @@ class ApplicationController < ActionController::Base
     @payslip_pulsing = new_activity?("payslip_requests", @payslip_latest)
   end
 
+  def notify_user!(user:, title:, message:, url: nil, kind: :general, icon: "bell")
+    notification = Notification.create!(
+      user: user,
+      title: title,
+      message: message,
+      url: url,
+      kind: kind
+    )
+
+    Turbo::StreamsChannel.broadcast_prepend_to(
+      "user_toasts_#{user.id}",
+      target: "toast-container",
+      partial: "shared/toast",
+      locals: {
+        title: title,
+        message: message,
+        icon: icon,
+        url: url,
+        notification_id: notification.id
+      }
+    )
+  end
+
   def notify_admins!(title:, message:, url:, kind: :general)
     User.admin.find_each do |admin|
       Notification.create!(

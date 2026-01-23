@@ -3,7 +3,8 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
   static values = {
     timeout: Number,
-    url: String
+    url: String,
+    notificationId: Number
   }
 
   connect() {
@@ -48,8 +49,30 @@ export default class extends Controller {
     this.stopTimer()
   }
 
-  open() {
-    if (this.urlValue) window.location.href = this.urlValue
+  
+  async open() {
+    // 1) mark notification as read
+    if (this.notificationIdValue) {
+      try {
+        const token = document.querySelector("meta[name='csrf-token']").content
+
+        await fetch(`/notifications/${this.notificationIdValue}/read`, {
+          method: "PATCH",
+          headers: {
+            "X-CSRF-Token": token,
+            "Accept": "application/json"
+          }
+        })
+      } catch (_) {}
+    }
+
+    // 2) redirect
+    if (this.urlValue) {
+      window.location.href = this.urlValue
+    }
+
+    // remove toast immediately after click
+    this.element.remove()
   }
 
   close(event) {

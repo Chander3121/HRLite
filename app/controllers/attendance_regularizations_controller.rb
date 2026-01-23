@@ -2,12 +2,15 @@ class AttendanceRegularizationsController < ApplicationController
   before_action :authenticate_user!
   before_action :ensure_employee
 
+  before_action :set_regularization, only: [:edit, :update]
+  before_action :ensure_pending, only: [:edit, :update]
+
   def index
     @requests = current_user.attendance_regularizations.order(date: :desc)
   end
 
   def new
-    @request = AttendanceRegularization.new(date: params[:date])
+    @regularization = current_user.attendance_regularizations.new
   end
 
   def create
@@ -26,7 +29,31 @@ class AttendanceRegularizationsController < ApplicationController
     end
   end
 
+  def edit
+  end
+
+  def update
+    if @regularization.update(request_params)
+      redirect_to attendance_regularizations_path,
+                  notice: "Attendance regularization updated successfully."
+    else
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
   private
+
+  def set_regularization
+    @regularization =
+      current_user.attendance_regularizations.find(params[:id])
+  end
+
+  def ensure_pending
+    return if @regularization.pending?
+
+    redirect_to attendance_regularizations_path,
+                alert: "Only pending regularization requests can be edited."
+  end
 
   def request_params
     params.require(:attendance_regularization).permit(

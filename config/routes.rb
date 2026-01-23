@@ -33,7 +33,7 @@ Rails.application.routes.draw do
     get :birthdays
   end
 
-  resources :leave_requests, only: [ :index, :new, :create ]
+  resources :leave_requests, only: [:index, :new, :create, :edit, :update]
 
   resources :attendances, only: [ :index ] do
     collection do
@@ -48,7 +48,7 @@ Rails.application.routes.draw do
     end
   end
   resources :payslip_requests, only: [ :index, :new, :create ]
-  resources :attendance_regularizations, only: [ :index, :new, :create ]
+  resources :attendance_regularizations, only: [:index, :new, :create, :edit, :update]
   # EMPLOYEE ROUTES ENDS HERE
 
 

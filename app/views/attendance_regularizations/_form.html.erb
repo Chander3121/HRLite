@@ -1,0 +1,35 @@
+<%= form_with model: @regularization,
+              data: { turbo: false },
+              class: "space-y-5" do |f| %>
+
+  <div>
+    <%= f.label :date, class: "block text-sm font-medium text-gray-700" %>
+    <%= f.date_field :date, class: input_class %>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+      <%= f.label :check_in, class: "block text-sm font-medium text-gray-700" %>
+      <%= f.time_field :check_in, class: input_class %>
+    </div>
+
+    <div>
+      <%= f.label :check_out, class: "block text-sm font-medium text-gray-700" %>
+      <%= f.time_field :check_out, class: input_class %>
+    </div>
+  </div>
+
+  <div>
+    <%= f.label :reason, class: "block text-sm font-medium text-gray-700" %>
+    <%= f.text_area :reason, rows: 3, class: input_class %>
+  </div>
+
+  <div class="flex justify-end gap-3 pt-4">
+    <%= link_to "Cancel",
+        attendance_regularizations_path,
+        class: "px-4 py-2 rounded-lg border text-gray-700" %>
+
+    <%= f.submit "Save Changes",
+        class: "px-5 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700" %>
+  </div>
+<% end %>

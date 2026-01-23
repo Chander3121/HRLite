@@ -6,6 +6,8 @@
       <tr>
         <th class="px-6 py-3">Employee</th>
         <th class="px-6 py-3">Date</th>
+        <th class="px-6 py-3">Check In</th>
+        <th class="px-6 py-3">Check Out</th>
         <th class="px-6 py-3">Reason</th>
         <th class="px-6 py-3">Action</th>
       </tr>
@@ -16,6 +18,8 @@
         <tr>
           <td class="px-6 py-3 text-center"><%= r.user.email %></td>
           <td class="px-6 py-3 text-center"><%= r.date %></td>
+          <td class="px-6 py-3 text-center"><%= r.check_in&.strftime("%I:%M %p") %></td>
+          <td class="px-6 py-3 text-center"><%= r.check_out&.strftime("%I:%M %p") %></td>
           <td class="px-6 py-3 text-center"><%= r.reason %></td>
           <td class="px-6 py-3 justify-center flex gap-2">
             <%= button_to "Approve",

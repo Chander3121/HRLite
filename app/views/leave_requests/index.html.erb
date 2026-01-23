@@ -10,26 +10,38 @@
   <table class="min-w-full text-sm">
     <thead class="bg-gray-50">
       <tr>
-        <th class="px-6 py-3 text-left">Type</th>
-        <th class="px-6 py-3 text-left">Duration</th>
-        <th class="px-6 py-3 text-left">Status</th>
+        <th class="px-6 py-3">Type</th>
+        <th class="px-6 py-3">Duration</th>
+        <th class="px-6 py-3">Reason</th>
+        <th class="px-6 py-3">Status</th>
+        <th class="px-6 py-3">Action</th>
       </tr>
     </thead>
 
     <tbody class="divide-y">
       <% @leaves.each do |leave| %>
         <tr>
-          <td class="px-6 py-3"><%= leave.leave_type.titleize %></td>
-          <td class="px-6 py-3">
-            <%= leave.start_date %> → <%= leave.end_date %>
+          <td class="px-6 py-3 text-center"><%= leave.leave_type.titleize %></td>
+          <td class="px-6 py-3 text-center">
+            <%= leave.start_date.strftime("%d %b %Y") %> → <%= leave.end_date.strftime("%d %b %Y") %>
           </td>
-          <td class="px-6 py-3">
+          <td class="px-6 py-3 text-center"><%= leave.reason %></td>
+          <td class="px-6 py-3 text-center">
             <span class="px-2 py-1 rounded-full text-xs font-medium
               <%= leave.pending? ? "bg-yellow-100 text-yellow-700" :
                   leave.approved? ? "bg-green-100 text-green-700" :
                   "bg-red-100 text-red-700" %>">
               <%= leave.status.titleize %>
             </span>
+          </td>
+          <td class="px-6 py-3 text-center">
+            <% if leave.pending? %>
+              <%= link_to "Edit",
+                  edit_leave_request_path(leave),
+                  class: "text-indigo-600 text-sm font-medium hover:underline" %>
+            <% else %>
+              <span class="text-xs text-gray-400">Locked</span>
+            <% end %>
           </td>
         </tr>
       <% end %>

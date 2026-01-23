@@ -1,0 +1,37 @@
+<div class="flex items-center justify-between mb-8">
+  <div>
+    <h1 class="text-3xl font-semibold text-gray-900">Notifications</h1>
+    <p class="text-sm text-gray-500 mt-1">Your latest updates</p>
+  </div>
+
+  <%= button_to "Mark all as read",
+      mark_all_read_notifications_path,
+      method: :post,
+      data: { turbo: false },
+      class: "px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700" %>
+</div>
+
+<div class="bg-white rounded-xl shadow divide-y">
+  <% @notifications.each do |n| %>
+    <div class="p-5 flex items-start justify-between gap-4">
+      <div>
+        <p class="font-medium text-gray-900"><%= n.title %></p>
+        <p class="text-sm text-gray-500 mt-1"><%= n.message %></p>
+
+        <p class="text-xs text-gray-400 mt-2">
+          <%= time_ago_in_words(n.created_at) %> ago
+          <% if n.read_at.nil? %>
+            · <span class="text-indigo-600 font-medium">Unread</span>
+          <% end %>
+        </p>
+      </div>
+
+      <% if n.url.present? %>
+        <%= link_to "Open",
+          read_notification_path(n),
+          data: { turbo_method: :patch },
+          class: "text-sm text-indigo-600 hover:underline whitespace-nowrap" %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

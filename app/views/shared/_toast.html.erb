@@ -3,8 +3,8 @@
          flex items-start gap-3 animate-slide-in cursor-pointer hover:bg-gray-50"
   data-controller="toast"
   data-toast-timeout-value="5000"
-  data-action="click->toast#open"
-  data-toast-url-value="<%= url %>">
+  data-toast-url-value="<%= url %>"
+  data-action="click->toast#open mouseenter->toast#pause mouseleave->toast#resume">
 
   <div class="flex-shrink-0">
     <%= heroicon icon,
@@ -13,11 +13,13 @@
   </div>
 
   <div class="flex-1">
-    <p class="text-sm font-medium text-gray-900">
-      <%= title %>
-    </p>
-    <p class="text-xs text-gray-500 mt-1">
-      <%= message %>
-    </p>
+    <p class="text-sm font-medium text-gray-900"><%= title %></p>
+    <p class="text-xs text-gray-500 mt-1"><%= message %></p>
   </div>
+
+  <button type="button"
+          class="text-gray-400 hover:text-gray-600"
+          data-action="click->toast#close">
+    ✕
+  </button>
 </div>

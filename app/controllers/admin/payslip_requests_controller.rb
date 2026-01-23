@@ -2,6 +2,8 @@ module Admin
   class PayslipRequestsController < ApplicationController
     before_action :ensure_admin
 
+    after_action -> { mark_seen("payslip_requests") }, only: :index
+
     def index
       @requests = PayslipRequest
                     .includes(:user)
@@ -28,15 +30,6 @@ module Admin
 
       redirect_to admin_payslip_requests_path,
         notice: "Payslip generated and email sent."
-    end
-
-    private
-
-    def mark_seen
-      AdminPreference.find_or_create_by!(
-        user: current_user,
-        key: "leave_requests"
-      ).update!(last_seen_at: Time.current)
     end
   end
 end

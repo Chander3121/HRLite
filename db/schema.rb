@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_22_193834) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_23_191943) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -131,6 +131,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_22_193834) do
     t.index ["user_id"], name: "index_leave_requests_on_user_id"
   end
 
+  create_table "notifications", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "kind"
+    t.text "message"
+    t.datetime "read_at"
+    t.string "title"
+    t.datetime "updated_at", null: false
+    t.string "url"
+    t.bigint "user_id", null: false
+    t.index ["user_id"], name: "index_notifications_on_user_id"
+  end
+
   create_table "payrolls", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.decimal "gross_salary", precision: 10, scale: 2
@@ -175,6 +187,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_22_193834) do
   add_foreign_key "employee_profiles", "users"
   add_foreign_key "leave_balances", "users"
   add_foreign_key "leave_requests", "users"
+  add_foreign_key "notifications", "users"
   add_foreign_key "payrolls", "users"
   add_foreign_key "payslip_requests", "users"
 end

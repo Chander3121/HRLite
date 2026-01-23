@@ -2,6 +2,8 @@ module Admin
   class AttendanceRegularizationsController < ApplicationController
     before_action :ensure_admin
 
+    after_action -> { mark_seen("attendance_regularizations") }, only: :index
+
     def index
       @requests = AttendanceRegularization.pending.includes(:user)
     end
@@ -45,13 +47,6 @@ module Admin
         check_out: request.check_out,
         worked_minutes: worked_minutes
       )
-    end
-
-    def mark_seen
-      AdminPreference.find_or_create_by!(
-        user: current_user,
-        key: "leave_requests"
-      ).update!(last_seen_at: Time.current)
     end
   end
 end

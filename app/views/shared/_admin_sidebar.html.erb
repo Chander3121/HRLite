@@ -14,13 +14,19 @@
 <%= sidebar_link "Attendance Regularize Requests",
     admin_attendance_regularizations_path,
     "bookmark-slash",
-    count: AttendanceRegularization.pending.count %>
+    count: @regularization_count,
+    pulsing: @regularization_pulsing,
+    badge_id: "regularization_badge" %>
 
 <%= sidebar_link "Payslip Requests",
     admin_payslip_requests_path,
     "document-text",
-    count: PayslipRequest.pending.count %>
+    count: @payslip_count,
+    pulsing: @payslip_pulsing,
+    badge_id: "payslip_badge" %>
 
 <%= sidebar_link "Payroll", admin_payrolls_path, "banknotes" %>
 
 <%= sidebar_link "Holidays", admin_holidays_path, "calendar" %>
+<%= sidebar_link "Notifications", notifications_path, "bell" %>
+

@@ -17,6 +17,15 @@ Rails.application.routes.draw do
   # SHARED ROUTES STARTS HERE
   get "/verify/:emp_id", to: "employees#verify", as: :verify_employee
   get "/holidays", to: "holidays#index", as: :holidays
+
+  resources :notifications, only: [:index] do
+    member do
+      patch :read
+    end
+    collection do
+      post :mark_all_read
+    end
+  end
   # SHARED ROUTES ENDS HERE
 
   # EMPLOYEE ROUTES STARTS HERE

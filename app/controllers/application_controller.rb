@@ -15,14 +15,35 @@ class ApplicationController < ActionController::Base
     devise_controller? ? "auth" : "application"
   end
 
+  def load_admin_sidebar_state
+    # ---- Leave Requests ----
+    @leave_count  = LeaveRequest.pending.count
+    @leave_latest = LeaveRequest.pending.maximum(:updated_at)
+    @leave_pulsing = new_activity?("leave_requests", @leave_latest)
+
+    # ---- Attendance Regularizations ----
+    @regularization_count  = AttendanceRegularization.pending.count
+    @regularization_latest = AttendanceRegularization.pending.maximum(:updated_at)
+    @regularization_pulsing = new_activity?("attendance_regularizations", @regularization_latest)
+
+    # ---- Payslip Requests ----
+    @payslip_count  = PayslipRequest.pending.count
+    @payslip_latest = PayslipRequest.pending.maximum(:updated_at)
+    @payslip_pulsing = new_activity?("payslip_requests", @payslip_latest)
+  end
+
   private
 
-  def load_admin_sidebar_state
-    @leave_count = LeaveRequest.pending.count
-    @leave_latest = LeaveRequest.pending.maximum(:updated_at)
+  def new_activity?(key, latest_updated_at)
+    return false if latest_updated_at.blank?
 
-    pref = current_user.admin_preferences.find_by(key: "leave_requests")
-    @leave_pulsing = pref.nil? || (@leave_latest && pref.last_seen_at < @leave_latest)
+    pref = current_user.admin_preferences.find_by(key: key)
+    pref.nil? || pref.last_seen_at.nil? || pref.last_seen_at < latest_updated_at
+  end
+
+  def mark_seen(key)
+    AdminPreference.find_or_create_by!(user: current_user, key: key)
+                  .update!(last_seen_at: Time.current)
   end
 
   def ensure_admin

@@ -1,0 +1,91 @@
+<div class="flex items-center justify-between mb-8">
+  <div>
+    <h1 class="text-2xl font-bold text-gray-900"><%= @letter.title %></h1>
+    <p class="text-sm text-gray-500 mt-1">
+      <%= @letter.letter_type.titleize %> · <%= @letter.user.email %>
+    </p>
+  </div>
+
+  <div class="flex items-center gap-3">
+    <% if @letter.issued? && @letter.pdf.attached? %>
+      <%= link_to download_admin_letter_path(@letter),
+          class: "inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gray-900 text-white hover:bg-black transition" do %>
+        <%= heroicon "arrow-down-tray", variant: :outline, options: { class: "h-5 w-5" } %>
+        Download PDF
+      <% end %>
+    <% end %>
+
+    <% if @letter.drafted? %>
+      <%= button_to issue_admin_letter_path(@letter),
+          method: :post,
+          data: { turbo_confirm: "Issue letter and generate PDF?" },
+          class: "inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 transition" do %>
+        <%= heroicon "paper-airplane", variant: :outline, options: { class: "h-5 w-5" } %>
+        Issue Letter
+      <% end %>
+    <% end %>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+  <!-- left -->
+  <div class="lg:col-span-1 space-y-6">
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+      <h2 class="text-sm font-semibold text-gray-900 mb-4">Employee</h2>
+
+      <% p = @letter.user.employee_profile %>
+      <p class="text-gray-900 font-semibold">
+        <%= p&.first_name %> <%= p&.last_name %>
+      </p>
+      <p class="text-sm text-gray-500"><%= @letter.user.email %></p>
+
+      <% if p.present? %>
+        <div class="mt-4 space-y-2 text-sm">
+          <p><span class="text-gray-500">Emp ID:</span> <span class="font-medium"><%= p.emp_id %></span></p>
+          <p><span class="text-gray-500">Designation:</span> <span class="font-medium"><%= p.designation %></span></p>
+        </div>
+      <% end %>
+
+      <div class="mt-6 flex items-center justify-between">
+        <span class="text-sm text-gray-500">Status</span>
+        <% if @letter.issued? %>
+          <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-100">
+            Issued
+          </span>
+        <% else %>
+          <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-yellow-50 text-yellow-700 border border-yellow-100">
+            Draft
+          </span>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+      <h2 class="text-sm font-semibold text-gray-900 mb-4">Letter Meta</h2>
+      <div class="text-sm space-y-2">
+        <p><span class="text-gray-500">Issued On:</span> <span class="font-medium"><%= @letter.issued_on.strftime("%d %b %Y") %></span></p>
+        <p><span class="text-gray-500">Template:</span> <span class="font-medium"><%= @letter.letter_template.name %></span></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- right -->
+  <div class="lg:col-span-2">
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-semibold text-gray-900">Preview</h2>
+        <span class="text-xs text-gray-400">
+          Template based
+        </span>
+      </div>
+
+      <div class="prose max-w-none text-gray-700">
+        <%= simple_format(@letter.letter_template.body) %>
+      </div>
+
+      <div class="mt-6 rounded-xl bg-gray-50 border border-gray-100 p-4 text-sm text-gray-600">
+        <b>Note:</b> Actual PDF uses variables like employee name, emp_id and designation.
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,30 @@
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const btn = document.getElementById("add-component-btn");
+    const tbody = document.getElementById("components-body");
+    const template = document.getElementById("component-template");
+
+    if (!btn || !tbody || !template) return;
+
+    btn.addEventListener("click", () => {
+      const html = template.innerHTML.replaceAll("NEW_RECORD", new Date().getTime());
+      tbody.insertAdjacentHTML("beforeend", html);
+    });
+
+    tbody.addEventListener("click", (e) => {
+      const removeBtn = e.target.closest(".remove-component");
+      if (!removeBtn) return;
+
+      const row = removeBtn.closest("tr.component-row");
+      if (!row) return;
+
+      // if persisted record => set destroy flag
+      const destroyFlag = row.querySelector("input.destroy-flag");
+      if (destroyFlag) {
+        destroyFlag.value = "1";
+      }
+
+      row.classList.add("hidden");
+    });
+  });
+</script>

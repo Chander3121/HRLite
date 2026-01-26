@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  letter_template: one
+  title: MyString
+  letter_type: 1
+  status: 1
+  issued_on: 2026-01-27
+  metadata: 
+
+two:
+  user: two
+  letter_template: two
+  title: MyString
+  letter_type: 1
+  status: 1
+  issued_on: 2026-01-27
+  metadata: 

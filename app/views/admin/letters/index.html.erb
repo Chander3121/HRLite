@@ -1,0 +1,78 @@
+<div class="flex items-center justify-between mb-8">
+  <div>
+    <h1 class="text-2xl font-bold text-gray-900">Letters</h1>
+    <p class="text-sm text-gray-500 mt-1">
+      Draft and issue letters to employees (PDF will be generated).
+    </p>
+  </div>
+
+  <%= link_to new_admin_letter_path,
+      class: "inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 shadow-sm transition" do %>
+    <%= heroicon "plus", variant: :outline, options: { class: "h-5 w-5" } %>
+    Create Letter
+  <% end %>
+</div>
+
+<div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+  <table class="min-w-full text-sm">
+    <thead class="bg-gray-50">
+      <tr>
+        <th class="px-6 py-4 text-left font-semibold text-gray-700">Employee</th>
+        <th class="px-6 py-4 text-left font-semibold text-gray-700">Type</th>
+        <th class="px-6 py-4 text-left font-semibold text-gray-700">Title</th>
+        <th class="px-6 py-4 text-left font-semibold text-gray-700">Issued On</th>
+        <th class="px-6 py-4 text-right font-semibold text-gray-700">Status</th>
+      </tr>
+    </thead>
+
+    <tbody class="divide-y divide-gray-100">
+      <% @letters.each do |letter| %>
+        <tr class="hover:bg-gray-50 transition">
+          <td class="px-6 py-4">
+            <div class="font-semibold text-gray-900"><%= letter.user.email %></div>
+            <% if letter.user.employee_profile.present? %>
+              <div class="text-xs text-gray-500">
+                <%= letter.user.employee_profile.emp_id %> · <%= letter.user.employee_profile.designation %>
+              </div>
+            <% end %>
+          </td>
+
+          <td class="px-6 py-4 text-gray-700">
+            <%= letter.letter_type.titleize %>
+          </td>
+
+          <td class="px-6 py-4">
+            <%= link_to admin_letter_path(letter),
+                class: "font-medium text-indigo-600 hover:underline" do %>
+              <%= letter.title %>
+            <% end %>
+          </td>
+
+          <td class="px-6 py-4 text-gray-700">
+            <%= letter.issued_on.strftime("%d %b %Y") rescue "—" %>
+          </td>
+
+          <td class="px-6 py-4 text-right">
+            <% if letter.issued? %>
+              <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-100">
+                Issued
+              </span>
+            <% else %>
+              <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-yellow-50 text-yellow-700 border border-yellow-100">
+                Draft
+              </span>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+
+      <% if @letters.empty? %>
+        <tr>
+          <td colspan="5" class="px-6 py-10 text-center text-gray-500">
+            No letters created yet.
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

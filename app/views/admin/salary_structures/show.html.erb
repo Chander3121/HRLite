@@ -1,0 +1,139 @@
+<div class="mb-8 flex items-center justify-between">
+  <div>
+    <p class="text-sm text-gray-500">Employee</p>
+    <h1 class="text-3xl font-semibold text-gray-900">
+      Salary Structure
+    </h1>
+    <p class="mt-1 text-sm text-gray-500">
+      <%= @user.email %>
+      <% if @structure&.effective_from.present? %>
+        • Effective from <%= @structure.effective_from.strftime("%d %b %Y") %>
+      <% end %>
+    </p>
+  </div>
+
+  <div class="flex items-center gap-3">
+    <%= link_to admin_employees_path,
+        class: "px-4 py-2 rounded-xl border border-gray-300 text-gray-700 hover:bg-gray-50" do %>
+      Back
+    <% end %>
+
+    <% if @structure.present? %>
+      <%= link_to edit_admin_employee_salary_structure_path(@user),
+          class: "px-4 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700" do %>
+        Edit Structure
+      <% end %>
+    <% else %>
+      <%= link_to new_admin_employee_salary_structure_path(@user),
+          class: "px-4 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700" do %>
+        Create Structure
+      <% end %>
+    <% end %>
+  </div>
+</div>
+
+<% if @structure.blank? %>
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+    <p class="text-gray-600">
+      No salary structure found for this employee.
+    </p>
+  </div>
+  <% return %>
+<% end %>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+  <!-- Earnings -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 lg:col-span-2">
+    <div class="flex items-center justify-between mb-5">
+      <h2 class="text-lg font-semibold text-gray-900">Salary Components</h2>
+      <span class="px-3 py-1 rounded-full text-xs font-semibold
+        <%= @structure.active? ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-700" %>">
+        <%= @structure.status.titleize %>
+      </span>
+    </div>
+
+    <div class="overflow-hidden rounded-xl border border-gray-200">
+      <table class="w-full text-sm">
+        <thead class="bg-gray-50 text-gray-600">
+          <tr>
+            <th class="px-4 py-3 text-left font-medium">Name</th>
+            <th class="px-4 py-3 text-left font-medium">Type</th>
+            <th class="px-4 py-3 text-right font-medium">Value</th>
+            <th class="px-4 py-3 text-right font-medium">Monthly Amount</th>
+          </tr>
+        </thead>
+
+        <tbody class="divide-y divide-gray-100 bg-white">
+          <% @structure.salary_components.each do |c| %>
+            <tr>
+              <td class="px-4 py-3 font-medium text-gray-900">
+                <%= c.name %>
+              </td>
+
+              <td class="px-4 py-3">
+                <span class="px-2 py-1 rounded-full text-xs font-semibold
+                  <%= c.earning? ? "bg-indigo-50 text-indigo-700" : "bg-red-50 text-red-700" %>">
+                  <%= c.component_type.titleize %>
+                </span>
+              </td>
+
+              <td class="px-4 py-3 text-right text-gray-600">
+                <% if c.fixed? %>
+                  ₹ <%= number_with_precision(c.amount, precision: 2) %>
+                <% else %>
+                  <%= number_with_precision(c.amount, precision: 2) %>%
+                  <span class="text-xs text-gray-400">(of <%= c.percent_of %>)</span>
+                <% end %>
+              </td>
+
+              <td class="px-4 py-3 text-right font-semibold text-gray-900">
+                ₹ <%= number_with_precision(c.computed_amount, precision: 2) %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <% if @structure.notes.present? %>
+      <div class="mt-6 p-4 rounded-xl bg-gray-50 text-sm text-gray-700">
+        <p class="font-medium text-gray-900 mb-1">Notes</p>
+        <%= simple_format(@structure.notes) %>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Totals -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+    <h2 class="text-lg font-semibold text-gray-900 mb-4">
+      Summary
+    </h2>
+
+    <div class="space-y-4 text-sm">
+      <div class="flex justify-between">
+        <span class="text-gray-600">Gross Salary</span>
+        <span class="font-semibold text-gray-900">
+          ₹ <%= number_with_precision(@structure.gross_salary, precision: 2) %>
+        </span>
+      </div>
+
+      <div class="flex justify-between">
+        <span class="text-gray-600">Total Deductions</span>
+        <span class="font-semibold text-red-600">
+          - ₹ <%= number_with_precision(@structure.total_deductions, precision: 2) %>
+        </span>
+      </div>
+
+      <div class="pt-4 border-t flex justify-between">
+        <span class="text-gray-900 font-medium">Net Salary</span>
+        <span class="font-bold text-green-700 text-lg">
+          ₹ <%= number_with_precision(@structure.net_salary, precision: 2) %>
+        </span>
+      </div>
+    </div>
+
+    <div class="mt-6 text-xs text-gray-500">
+      Payroll & payslip will use this salary structure.
+    </div>
+  </div>
+</div>

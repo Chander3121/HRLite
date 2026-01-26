@@ -13,6 +13,14 @@ class User < ApplicationRecord
   has_many :admin_preferences, dependent: :destroy
   has_many :notifications, dependent: :destroy
 
+  has_many :salary_structures, dependent: :destroy
+  has_one :active_salary_structure,
+    -> { where(status: :active).order(effective_from: :desc) },
+    class_name: "SalaryStructure"
+  has_many :payrolls, dependent: :destroy
+  has_many :letters, dependent: :destroy
+  has_many :letter_templates, through: :letters
+
   after_create :setup_leave_balances, if: :employee?
 
   private

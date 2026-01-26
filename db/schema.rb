@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_23_191943) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_26_220334) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -131,6 +131,32 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_23_191943) do
     t.index ["user_id"], name: "index_leave_requests_on_user_id"
   end
 
+  create_table "letter_templates", force: :cascade do |t|
+    t.boolean "active", default: true, null: false
+    t.text "body", null: false
+    t.datetime "created_at", null: false
+    t.integer "letter_type", null: false
+    t.string "name", null: false
+    t.datetime "updated_at", null: false
+    t.index ["letter_type", "active"], name: "index_letter_templates_on_letter_type_and_active"
+  end
+
+  create_table "letters", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.date "issued_on", null: false
+    t.bigint "letter_template_id", null: false
+    t.integer "letter_type", null: false
+    t.jsonb "metadata", default: {}, null: false
+    t.integer "status", default: 0, null: false
+    t.string "title", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["issued_on"], name: "index_letters_on_issued_on"
+    t.index ["letter_template_id"], name: "index_letters_on_letter_template_id"
+    t.index ["user_id", "letter_type"], name: "index_letters_on_user_id_and_letter_type"
+    t.index ["user_id"], name: "index_letters_on_user_id"
+  end
+
   create_table "notifications", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "kind"
@@ -145,14 +171,22 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_23_191943) do
 
   create_table "payrolls", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.decimal "deductions_monthly", precision: 12, scale: 2
+    t.decimal "deductions_payable", precision: 12, scale: 2
+    t.decimal "gross_monthly", precision: 12, scale: 2
+    t.decimal "gross_payable", precision: 12, scale: 2
     t.decimal "gross_salary", precision: 10, scale: 2
+    t.boolean "locked", default: false, null: false
     t.date "month"
+    t.decimal "net_payable", precision: 12, scale: 2
     t.decimal "net_salary", precision: 10, scale: 2
     t.decimal "paid_days", precision: 5, scale: 2
     t.decimal "payable_days"
+    t.decimal "payable_ratio", precision: 6, scale: 4
     t.decimal "unpaid_days", precision: 5, scale: 2
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
+    t.index ["month", "locked"], name: "index_payrolls_on_month_and_locked"
     t.index ["user_id"], name: "index_payrolls_on_user_id"
   end
 
@@ -164,6 +198,29 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_23_191943) do
     t.bigint "user_id", null: false
     t.index ["user_id", "month"], name: "index_payslip_requests_on_user_id_and_month", unique: true
     t.index ["user_id"], name: "index_payslip_requests_on_user_id"
+  end
+
+  create_table "salary_components", force: :cascade do |t|
+    t.decimal "amount", precision: 12, scale: 2, default: "0.0", null: false
+    t.integer "calculation_mode", default: 0, null: false
+    t.integer "component_type", null: false
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.string "percent_of"
+    t.bigint "salary_structure_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["salary_structure_id"], name: "index_salary_components_on_salary_structure_id"
+  end
+
+  create_table "salary_structures", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.date "effective_from", null: false
+    t.text "notes"
+    t.integer "status", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["user_id", "status"], name: "index_salary_structures_on_user_id_and_status"
+    t.index ["user_id"], name: "index_salary_structures_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -187,7 +244,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_23_191943) do
   add_foreign_key "employee_profiles", "users"
   add_foreign_key "leave_balances", "users"
   add_foreign_key "leave_requests", "users"
+  add_foreign_key "letters", "letter_templates"
+  add_foreign_key "letters", "users"
   add_foreign_key "notifications", "users"
   add_foreign_key "payrolls", "users"
   add_foreign_key "payslip_requests", "users"
+  add_foreign_key "salary_components", "salary_structures"
+  add_foreign_key "salary_structures", "users"
 end

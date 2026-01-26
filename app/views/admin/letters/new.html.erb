@@ -1,0 +1,74 @@
+<div class="mb-8">
+  <h1 class="text-2xl font-bold text-gray-900">Create Letter</h1>
+  <p class="text-sm text-gray-500 mt-1">
+    Choose employee + template, then issue PDF letter.
+  </p>
+</div>
+
+<div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+  <%= form_with model: [:admin, @letter],
+                data: { turbo: false },
+                class: "space-y-8" do |f| %>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <%= f.label :user_id, "Employee", class: "block text-sm font-medium text-gray-700" %>
+        <%= f.select :user_id,
+            @employees.map { |u|
+              p = u.employee_profile
+              label = p.present? ? "#{p.first_name} #{p.last_name} (#{p.emp_id})" : u.email
+              [label, u.id]
+            },
+            { prompt: "Select employee" },
+            class: input_class %>
+      </div>
+
+      <div>
+        <%= f.label :letter_template_id, "Template", class: "block text-sm font-medium text-gray-700" %>
+        <%= f.select :letter_template_id,
+            @templates.map { |t| ["#{t.name} (#{t.letter_type.titleize})", t.id] },
+            { prompt: "Select template" },
+            class: input_class %>
+      </div>
+
+      <div>
+        <%= f.label :letter_type, class: "block text-sm font-medium text-gray-700" %>
+        <%= f.select :letter_type,
+            LetterTemplate.letter_types.keys.map { |k| [k.titleize, k] },
+            { prompt: "Select type" },
+            class: input_class %>
+      </div>
+
+      <div>
+        <%= f.label :issued_on, class: "block text-sm font-medium text-gray-700" %>
+        <%= f.date_field :issued_on, class: input_class %>
+      </div>
+    </div>
+
+    <div>
+      <%= f.label :title, class: "block text-sm font-medium text-gray-700" %>
+      <%= f.text_field :title,
+          placeholder: "Offer Letter - HRLite",
+          class: input_class %>
+    </div>
+
+    <div class="rounded-xl bg-indigo-50 border border-indigo-100 p-4 text-sm text-indigo-800 flex gap-3">
+      <%= heroicon "information-circle", variant: :outline, options: { class: "h-5 w-5 mt-0.5" } %>
+      <div>
+        <p class="font-semibold">Tip</p>
+        <p class="text-indigo-700">
+          After creating the draft, click <b>Issue Letter</b> to generate the PDF.
+        </p>
+      </div>
+    </div>
+
+    <div class="flex justify-end gap-3 pt-4 border-t">
+      <%= link_to "Cancel",
+          admin_letters_path,
+          class: "px-5 py-2.5 rounded-xl border border-gray-300 text-gray-700 hover:bg-gray-50" %>
+
+      <%= f.submit "Create Draft",
+          class: "px-6 py-2.5 rounded-xl bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition" %>
+    </div>
+  <% end %>
+</div>

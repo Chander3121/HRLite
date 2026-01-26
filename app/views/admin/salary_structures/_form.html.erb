@@ -1,0 +1,87 @@
+<%= form_with model: @structure,
+              url: form_url,
+              method: form_method,
+              data: { turbo: false },
+              class: "space-y-8" do |f| %>
+
+  <!-- TOP -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div>
+      <%= f.label :effective_from, "Effective From", class: "block text-sm font-medium text-gray-700" %>
+      <%= f.date_field :effective_from, class: input_class, required: true %>
+    </div>
+
+    <div>
+      <%= f.label :status, class: "block text-sm font-medium text-gray-700" %>
+      <%= f.select :status,
+          SalaryStructure.statuses.keys.map { |s| [s.titleize, s] },
+          {},
+          class: select_class %>
+    </div>
+
+    <div>
+      <%= f.label :notes, class: "block text-sm font-medium text-gray-700" %>
+      <%= f.text_field :notes, placeholder: "Optional notes", class: input_class %>
+    </div>
+  </div>
+
+  <!-- COMPONENTS -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100">
+    <div class="p-6 flex items-center justify-between">
+      <div>
+        <h2 class="text-lg font-semibold text-gray-900">Salary Components</h2>
+        <p class="text-sm text-gray-500 mt-1">
+          Add earnings and deductions (monthly)
+        </p>
+      </div>
+
+      <button type="button"
+        id="add-component-btn"
+        class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700">
+        <%= heroicon "plus", variant: :outline, options: { class: "h-5 w-5" } %>
+        Add Component
+      </button>
+    </div>
+
+    <div class="border-t border-gray-100 p-6">
+      <div class="overflow-hidden rounded-xl border border-gray-200">
+        <table class="w-full text-sm">
+          <thead class="bg-gray-50 text-gray-600">
+            <tr>
+              <th class="px-4 py-3 text-left font-medium">Name</th>
+              <th class="px-4 py-3 text-left font-medium">Type</th>
+              <th class="px-4 py-3 text-left font-medium">Mode</th>
+              <th class="px-4 py-3 text-left font-medium">%</th>
+              <th class="px-4 py-3 text-right font-medium">Amount</th>
+              <th class="px-4 py-3"></th>
+            </tr>
+          </thead>
+
+          <tbody id="components-body" class="divide-y divide-gray-100 bg-white">
+            <%= f.fields_for :salary_components do |cf| %>
+              <%= render "component_fields", f: cf %>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACTIONS -->
+  <div class="flex items-center justify-end gap-4">
+    <%= link_to "Cancel",
+        admin_employee_salary_structure_path(@user),
+        class: "px-5 py-2.5 rounded-xl border border-gray-300 text-gray-700 hover:bg-gray-50" %>
+
+    <%= f.submit "Save Salary Structure",
+        class: "px-6 py-2.5 rounded-xl bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition" %>
+  </div>
+
+<% end %>
+
+<!-- hidden template row -->
+<template id="component-template">
+  <%= f.fields_for :salary_components, SalaryComponent.new, child_index: "NEW_RECORD" do |cf| %>
+    <%= render "component_fields", f: cf %>
+  <% end %>
+</template>

@@ -1,0 +1,70 @@
+<div class="flex items-center justify-between mb-8">
+  <div>
+    <h1 class="text-2xl font-bold text-gray-900">Letter Templates</h1>
+    <p class="text-sm text-gray-500 mt-1">
+      Manage templates for offer, promotion, increment, appreciation and certificates
+    </p>
+  </div>
+
+  <%= link_to new_admin_letter_template_path,
+      class: "inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 shadow-sm transition" do %>
+    <%= heroicon "plus", variant: :outline, options: { class: "h-5 w-5" } %>
+    New Template
+  <% end %>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+  <% @templates.each do |t| %>
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition overflow-hidden">
+      <div class="p-6">
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <p class="text-xs uppercase tracking-wide text-gray-400">
+              <%= t.letter_type.titleize %>
+            </p>
+            <h2 class="text-lg font-semibold text-gray-900">
+              <%= t.name %>
+            </h2>
+          </div>
+
+          <% if t.active? %>
+            <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-100">
+              Active
+            </span>
+          <% else %>
+            <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 border border-gray-200">
+              Inactive
+            </span>
+          <% end %>
+        </div>
+
+        <div class="mt-4 text-sm text-gray-500 line-clamp-3">
+          <%= simple_format(t.body.truncate(200)) %>
+        </div>
+      </div>
+
+      <div class="px-6 py-4 bg-gray-50 border-t flex items-center justify-between">
+        <%= link_to edit_admin_letter_template_path(t),
+            class: "inline-flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-indigo-600 transition" do %>
+          <%= heroicon "pencil-square", variant: :outline, options: { class: "h-5 w-5" } %>
+          Edit
+        <% end %>
+
+        <%= button_to admin_letter_template_path(t),
+            method: :delete,
+            data: { turbo_confirm: "Delete this template? This cannot be undone." },
+            class: "inline-flex items-center gap-2 text-sm font-medium text-red-600 hover:text-red-700 transition" do %>
+          <%= heroicon "trash", variant: :outline, options: { class: "h-5 w-5" } %>
+          Delete
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <% if @templates.empty? %>
+    <div class="col-span-full bg-white rounded-2xl border border-gray-100 p-10 text-center">
+      <p class="text-gray-600">No templates yet.</p>
+      <p class="text-sm text-gray-400 mt-1">Create your first letter template.</p>
+    </div>
+  <% end %>
+</div>

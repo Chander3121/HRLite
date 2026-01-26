@@ -1,0 +1,55 @@
+<div class="mb-8">
+  <h1 class="text-2xl font-bold text-gray-900">My Payrolls</h1>
+  <p class="text-sm text-gray-500 mt-1">
+    View monthly payroll history and download payslips
+  </p>
+</div>
+
+<div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-x-auto">
+  <table class="min-w-full text-sm">
+    <thead class="bg-gray-50">
+      <tr>
+        <th class="px-6 py-4 text-left font-semibold text-gray-700">Month</th>
+        <th class="px-6 py-4 text-center font-semibold text-gray-700">Paid Days</th>
+        <th class="px-6 py-4 text-center font-semibold text-gray-700">Net Salary</th>
+        <th class="px-6 py-4 text-right font-semibold text-gray-700">Actions</th>
+      </tr>
+    </thead>
+
+    <tbody class="divide-y divide-gray-100">
+      <% @payrolls.each do |payroll| %>
+        <tr class="hover:bg-gray-50">
+          <td class="px-6 py-4 font-medium text-gray-900">
+            <%= payroll.month.strftime("%B %Y") %>
+          </td>
+
+          <td class="px-6 py-4 text-center text-gray-700">
+            <%= payroll.paid_days %>
+          </td>
+
+          <td class="px-6 py-4 text-center font-semibold text-gray-900">
+            ₹ <%= payroll.net_payable || payroll.net_salary %>
+          </td>
+
+          <td class="px-6 py-4 text-right space-x-3">
+            <%= link_to "View",
+                payroll_path(payroll),
+                class: "text-indigo-600 font-medium hover:underline" %>
+
+            <%= link_to "Download PDF",
+                download_payroll_path(payroll),
+                class: "text-gray-700 font-medium hover:underline" %>
+          </td>
+        </tr>
+      <% end %>
+
+      <% if @payrolls.empty? %>
+        <tr>
+          <td colspan="4" class="px-6 py-10 text-center text-gray-500">
+            No payroll records found yet.
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

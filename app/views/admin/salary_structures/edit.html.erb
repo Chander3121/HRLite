@@ -1,0 +1,12 @@
+<div class="mb-8">
+  <h1 class="text-3xl font-semibold text-gray-900">Edit Salary Structure</h1>
+  <p class="mt-1 text-sm text-gray-500">
+    Employee: <%= @user.email %>
+  </p>
+</div>
+
+<%= render "form",
+  form_url: admin_employee_salary_structure_path(@user),
+  form_method: :patch %>
+
+<%= render "components_js" %>

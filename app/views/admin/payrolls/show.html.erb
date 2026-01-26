@@ -1,0 +1,154 @@
+<div class="mb-8 flex items-start justify-between">
+  <div>
+    <h1 class="text-3xl font-semibold text-gray-900">Payroll Breakdown</h1>
+    <p class="mt-1 text-sm text-gray-500">
+      Detailed salary structure breakdown for <%= @payroll.month.strftime("%B %Y") %>
+    </p>
+  </div>
+
+  <div class="flex justify-end gap-3 mb-6">
+    <%= link_to "Download Payslip PDF",
+        download_admin_payroll_path(@payroll),
+        class: "px-4 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700" %>
+  </div>
+</div>
+
+<!-- Employee + Payroll Summary -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+  <!-- Employee Card -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+    <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">
+      Employee
+    </h2>
+
+    <p class="text-lg font-semibold text-gray-900"><%= @user.email %></p>
+
+    <% if @user.employee_profile.present? %>
+      <div class="mt-2 text-sm text-gray-600 space-y-1">
+        <p><span class="font-medium text-gray-800">Emp ID:</span> <%= @user.employee_profile.emp_id %></p>
+        <p><span class="font-medium text-gray-800">Designation:</span> <%= @user.employee_profile.designation %></p>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Attendance Summary -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+    <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">
+      Attendance Summary
+    </h2>
+
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <p class="text-xs text-gray-500">Paid Days</p>
+        <p class="mt-1 text-xl font-semibold text-gray-900"><%= @payroll.paid_days %></p>
+      </div>
+      <div>
+        <p class="text-xs text-gray-500">Unpaid Days</p>
+        <p class="mt-1 text-xl font-semibold text-gray-900"><%= @payroll.unpaid_days %></p>
+      </div>
+    </div>
+
+    <div class="mt-4">
+      <p class="text-xs text-gray-500">Payable Days</p>
+      <p class="mt-1 text-lg font-semibold text-gray-900"><%= @payroll.payable_days %></p>
+    </div>
+  </div>
+
+  <!-- Salary Totals -->
+  <div class="bg-white rounded-xl shadow p-6">
+    <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">
+      Salary Totals
+    </h3>
+
+    <div class="space-y-2 text-sm">
+      <div class="flex justify-between">
+        <span class="text-gray-600">Gross (Monthly)</span>
+        <span class="font-semibold">₹ <%= @payroll.gross_monthly %></span>
+      </div>
+
+      <div class="flex justify-between">
+        <span class="text-gray-600">Gross (Payable)</span>
+        <span class="font-semibold text-gray-900">₹ <%= @payroll.gross_payable %></span>
+      </div>
+
+      <div class="flex justify-between pt-2 border-t">
+        <span class="text-gray-600">Deductions (Payable)</span>
+        <span class="font-semibold text-red-600">- ₹ <%= @payroll.deductions_payable %></span>
+      </div>
+
+      <div class="flex justify-between pt-2 border-t text-lg">
+        <span class="font-bold text-gray-900">Net Salary</span>
+        <span class="font-bold text-gray-900">₹ <%= @payroll.net_payable %></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Earnings + Deductions -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+  <!-- Earnings -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="px-6 py-4 border-b border-gray-100 flex items-center gap-2">
+      <%= heroicon "plus-circle", variant: :outline, options: { class: "h-5 w-5 text-emerald-600" } %>
+      <h2 class="text-lg font-semibold text-gray-900">Earnings</h2>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left">Component</th>
+            <th class="px-6 py-3 text-right">Monthly</th>
+            <th class="px-6 py-3 text-right">Payable</th>
+          </tr>
+        </thead>
+
+        <tbody class="divide-y">
+          <% @structure.salary_components.earning.each do |c| %>
+            <% monthly = c.calculated_amount.to_f %>
+            <% payable = (monthly * @payroll.payable_ratio.to_f).round(2) %>
+
+            <tr>
+              <td class="px-6 py-3 font-medium"><%= c.name %></td>
+              <td class="px-6 py-3 text-right">₹ <%= monthly %></td>
+              <td class="px-6 py-3 text-right font-semibold text-gray-900">₹ <%= payable %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Deductions -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="px-6 py-4 border-b border-gray-100 flex items-center gap-2">
+      <%= heroicon "minus-circle", variant: :outline, options: { class: "h-5 w-5 text-red-600" } %>
+      <h2 class="text-lg font-semibold text-gray-900">Deductions</h2>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left">Component</th>
+            <th class="px-6 py-3 text-right">Monthly</th>
+            <th class="px-6 py-3 text-right">Payable</th>
+          </tr>
+        </thead>
+
+        <tbody class="divide-y">
+          <% @structure.salary_components.earning.each do |c| %>
+            <% monthly = c.calculated_amount.to_f %>
+            <% payable = (monthly * @payroll.payable_ratio.to_f).round(2) %>
+
+            <tr>
+              <td class="px-6 py-3 font-medium"><%= c.name %></td>
+              <td class="px-6 py-3 text-right">₹ <%= monthly %></td>
+              <td class="px-6 py-3 text-right font-semibold text-gray-900">₹ <%= payable %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

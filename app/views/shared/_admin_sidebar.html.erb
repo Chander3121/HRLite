@@ -25,6 +25,11 @@
     pulsing: @payslip_pulsing,
     badge_id: "payslip_badge" %>
 
+<%= sidebar_link "Salary Structure", admin_employees_path, "currency-rupee" %>
+
+<%= sidebar_link "Letters", admin_letters_path, "document-duplicate" %>
+<%= sidebar_link "Letter Templates", admin_letter_templates_path, "document-text" %>
+
 <%= sidebar_link "Payroll", admin_payrolls_path, "banknotes" %>
 
 <%= sidebar_link "Holidays", admin_holidays_path, "calendar" %>

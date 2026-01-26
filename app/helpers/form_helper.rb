@@ -9,4 +9,8 @@ module FormHelper
      focus:ring-2 focus:ring-indigo-500/20
      transition"
   end
+
+  def select_class
+    input_class
+  end
 end

@@ -1,0 +1,42 @@
+<tr class="component-row">
+  <td class="px-4 py-3">
+    <%= f.text_field :name, placeholder: "e.g. Basic", class: input_class, required: true %>
+  </td>
+
+  <td class="px-4 py-3">
+    <%= f.select :component_type,
+        SalaryComponent.component_types.keys.map { |t| [t.titleize, t] },
+        {},
+        class: select_class %>
+  </td>
+
+  <td class="px-4 py-3">
+    <%= f.select :calculation_mode,
+        SalaryComponent.calculation_modes.keys.map { |m| [m.titleize, m] },
+        {},
+        class: select_class %>
+  </td>
+
+  <td class="px-4 py-3">
+    <%= f.select :percent_of,
+        [["Basic", "basic"], ["Gross", "gross"]],
+        { include_blank: true },
+        class: select_class %>
+  </td>
+
+  <td class="px-4 py-3 text-right">
+    <%= f.number_field :amount,
+        step: 0.01,
+        min: 0,
+        class: input_class,
+        required: true %>
+  </td>
+
+  <td class="px-4 py-3 text-right">
+    <%= f.hidden_field :_destroy, class: "destroy-flag" %>
+    <button type="button"
+      class="remove-component inline-flex items-center gap-1 text-red-600 hover:text-red-700">
+      <%= heroicon "trash", variant: :outline, options: { class: "h-5 w-5" } %>
+    </button>
+  </td>
+</tr>

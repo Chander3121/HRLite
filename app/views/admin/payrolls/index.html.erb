@@ -1,54 +1,141 @@
-<h1 class="text-2xl font-bold mb-6">Payroll</h1>
+<div class="mb-8 flex items-center justify-between">
+  <div>
+    <h1 class="text-3xl font-semibold text-gray-900">Payroll</h1>
+    <p class="mt-1 text-sm text-gray-500">
+      Generate payroll based on attendance + salary structure
+    </p>
+  </div>
+</div>
 
-<div class="bg-white rounded-xl shadow p-6 mb-6">
+<!-- Generate Payroll -->
+<div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
   <%= form_with url: admin_payrolls_path,
                 method: :post,
                 local: true,
-                class: "flex gap-4 items-end" do %>
+                class: "flex flex-col md:flex-row gap-4 md:items-end md:justify-between" do %>
 
-    <div>
+    <div class="w-full md:max-w-xs">
       <label class="block text-sm font-medium text-gray-700">Month</label>
       <%= month_field_tag :month,
           @month.strftime("%Y-%m"),
-          class: input_class %>
+          class: input_class,
+          required: true %>
+      <p class="mt-1 text-xs text-gray-500">
+        Payroll will be created for all employees for this month.
+      </p>
     </div>
 
-    <%= submit_tag "Generate Payroll",
-        class: "px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700" %>
+    <div class="flex items-center gap-3">
+      <%= submit_tag "Generate Payroll",
+          class: "inline-flex items-center gap-2 px-5 py-2.5 rounded-xl
+                  bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition" %>
+      <%= button_to "Lock Payroll Month",
+          lock_month_admin_payrolls_path(month: @month.strftime("%Y-%m")),
+          method: :post,
+          data: { turbo_confirm: "Lock payroll for #{@month.strftime("%B %Y")} ? This cannot be undone." },
+          class: "px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700" %>
+    </div>
   <% end %>
 </div>
 
-<div class="bg-white rounded-xl shadow overflow-x-auto">
-  <table class="min-w-full text-sm">
-    <thead class="bg-gray-50">
-      <tr>
-        <th class="px-4 py-3">Employee</th>
-        <th class="px-4 py-3">Paid Days</th>
-        <th class="px-4 py-3">Unpaid Days</th>
-        <th class="px-4 py-3">Gross Salary</th>
-        <th class="px-4 py-3">Net Salary</th>
-      </tr>
-    </thead>
+<!-- Payroll Table -->
+<div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+  <div class="px-6 py-4 pt-4 border-b border-gray-100 flex items-center justify-between">
+    <h2 class="text-lg font-semibold text-gray-900">
+      Payroll Records
+    </h2>
 
-    <tbody class="divide-y">
-      <% @payrolls.each do |payroll| %>
+    <div class="text-sm text-gray-500">
+      Month: <span class="font-medium text-gray-900"><%= @month.strftime("%B %Y") %></span>
+    </div>
+  </div>
+
+  <div class="overflow-x-auto">
+    <table class="min-w-full text-sm">
+      <thead class="bg-gray-50 text-gray-600">
         <tr>
-          <td class="px-4 py-3 text-center"><%= payroll.user.email %></td>
-          <td class="px-4 py-3 text-center"><%= payroll.paid_days %></td>
-          <td class="px-4 py-3 text-center"><%= payroll.unpaid_days %></td>
-          <td class="px-4 py-3 text-center">₹ <%= payroll.gross_salary %></td>
-          <td class="px-4 py-3 font-semibold text-center">
-            ₹ <%= payroll.net_salary %>
-          </td>
+          <th class="px-6 py-3 text-left font-medium">Employee</th>
+          <th class="px-6 py-3 text-center font-medium">Salary Structure</th>
+          <th class="px-6 py-3 text-center font-medium">Paid Days</th>
+          <th class="px-6 py-3 text-center font-medium">Unpaid Days</th>
+          <th class="px-6 py-3 text-center font-medium">Gross Salary</th>
+          <th class="px-6 py-3 text-center font-medium">Net Salary</th>
+          <th class="px-6 py-3 text-right font-medium">Actions</th>
         </tr>
-      <% end %>
-      <% if @payrolls.empty? %>
-        <tr>
-          <td colspan="4" class="px-6 py-6 text-center text-gray-500">
-            No payroll records found for the selected month.
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
+      </thead>
+
+      <tbody class="divide-y divide-gray-100 bg-white">
+        <% @payrolls.each do |payroll| %>
+          <% user = payroll.user %>
+          <% structure = user.active_salary_structure %>
+
+          <tr class="hover:bg-gray-50/50 transition">
+            <td class="px-6 py-4">
+              <div class="font-medium text-gray-900"><%= user.email %></div>
+              <% if user.employee_profile.present? %>
+                <div class="text-xs text-gray-500">
+                  <%= user.employee_profile.emp_id %> • <%= user.employee_profile.designation %>
+                </div>
+              <% end %>
+            </td>
+
+            <!-- Salary Structure -->
+            <td class="px-6 text-center">
+              <div class="py-4 flex justify-center">
+                <% if structure.present? %>
+                  <span class="flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700">
+                    <%= heroicon "check-circle", variant: :outline, options: { class: "h-4 w-4" } %>
+                    Set
+                  </span>
+                <% else %>
+                  <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-700">
+                    <%= heroicon "exclamation-triangle", variant: :outline, options: { class: "h-4 w-4" } %>
+                    Missing
+                  </span>
+                <% end %>
+              </div>
+            </td>
+
+            <td class="px-6 py-4 text-center"><%= payroll.paid_days %></td>
+            <td class="px-6 py-4 text-center"><%= payroll.unpaid_days %></td>
+
+            <td class="px-6 py-4 text-center text-gray-700">
+              ₹ <%= number_with_precision(payroll.gross_salary.to_f, precision: 2) %>
+            </td>
+
+            <td class="px-6 py-4 text-center font-semibold text-gray-900">
+              ₹ <%= number_with_precision(payroll.net_salary.to_f, precision: 2) %>
+            </td>
+
+            <!-- Actions -->
+            <td class="px-6 py-4 text-right whitespace-nowrap">
+              <% if structure.present? %>
+                <%= link_to "View Structure",
+                    admin_payroll_path(payroll),
+                    class: "text-indigo-600 hover:underline text-sm font-medium" %>
+              <% else %>
+                <%= link_to "Set Salary Structure",
+                    new_admin_employee_salary_structure_path(user),
+                    class: "text-indigo-600 hover:underline text-sm font-medium" %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+
+        <% if @payrolls.empty? %>
+          <tr>
+            <td colspan="7" class="px-6 py-12 text-center text-gray-500">
+              <div class="flex flex-col items-center gap-2">
+                <%= heroicon "document-text", variant: :outline, options: { class: "h-10 w-10 text-gray-300" } %>
+                <p class="font-medium text-gray-700">No payroll records found.</p>
+                <p class="text-sm text-gray-500 mb-4">
+                  Generate payroll for <%= @month.strftime("%B %Y") %> to see results here.
+                </p>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
 </div>

@@ -57,6 +57,18 @@ Rails.application.routes.draw do
       patch :cancel
     end
   end
+
+  resources :payrolls, only: [:index, :show] do
+    member do
+      get :download
+    end
+  end
+
+  resources :letters, only: [:index, :show] do
+    member do
+      get :download
+    end
+  end
   # EMPLOYEE ROUTES ENDS HERE
 
 
@@ -64,7 +76,9 @@ Rails.application.routes.draw do
   namespace :admin do
     resource :dashboard, only: [ :show ]
 
-    resources :employees, only: [ :index, :new, :create, :edit, :update ]
+    resources :employees, only: [ :index, :new, :create, :edit, :update ] do
+      resource :salary_structure, only: [:new, :create, :edit, :update, :show]
+    end
 
     resources :attendances, only: [ :index, :edit, :update ] do
       collection do
@@ -83,9 +97,23 @@ Rails.application.routes.draw do
 
     resources :attendance_summaries, only: [ :index ]
 
-    resources :payrolls, only: [ :index, :create ]
+    resources :payrolls, only: [ :index, :create, :show ] do
+      member do
+        get :download
+      end
+      collection do
+        post :lock_month
+      end
+    end
     resources :payslip_requests, only: [ :index, :update ]
     resources :attendance_regularizations, only: [ :index, :update ]
+    resources :letter_templates
+    resources :letters do
+      member do
+        get :download
+        post :issue
+      end
+    end
   end
   # ADMIN ROUTES ENDS HERE
 end

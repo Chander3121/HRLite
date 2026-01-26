@@ -1,0 +1,51 @@
+<%= form_with model: [:admin, @template],
+              data: { turbo: false },
+              class: "space-y-8" do |f| %>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div>
+      <%= f.label :name, class: "block text-sm font-medium text-gray-700" %>
+      <%= f.text_field :name, placeholder: "Offer Letter", class: input_class %>
+    </div>
+
+    <div>
+      <%= f.label :letter_type, class: "block text-sm font-medium text-gray-700" %>
+      <%= f.select :letter_type,
+          LetterTemplate.letter_types.keys.map { |k| [k.titleize, k] },
+          { prompt: "Select type" },
+          class: input_class %>
+    </div>
+  </div>
+
+  <div class="flex items-center gap-3">
+    <%= f.check_box :active,
+        class: "h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" %>
+    <%= f.label :active, "Active template", class: "text-sm text-gray-700" %>
+  </div>
+
+  <div>
+    <div class="flex items-center justify-between">
+      <%= f.label :body, class: "block text-sm font-medium text-gray-700" %>
+      <p class="text-xs text-gray-400">
+        Variables: <span class="font-mono">{{employee_name}}</span>,
+        <span class="font-mono">{{designation}}</span>,
+        <span class="font-mono">{{emp_id}}</span>,
+        <span class="font-mono">{{joining_date}}</span>
+      </p>
+    </div>
+
+    <%= f.text_area :body,
+        rows: 12,
+        class: "#{input_class} font-mono text-sm",
+        placeholder: "Write letter body here..." %>
+  </div>
+
+  <div class="flex justify-end gap-3 pt-4 border-t">
+    <%= link_to "Cancel",
+        admin_letter_templates_path,
+        class: "px-5 py-2.5 rounded-xl border border-gray-300 text-gray-700 hover:bg-gray-50" %>
+
+    <%= f.submit (@template.new_record? ? "Create Template" : "Update Template"),
+        class: "px-6 py-2.5 rounded-xl bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition" %>
+  </div>
+<% end %>
